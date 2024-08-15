@@ -5,7 +5,7 @@
   "type": "module",
   "main": "main.js",
   "scripts": {
-    "test": "node --no-warnings --experimental-strip-types --test ./main.test.ts"
+    "test": "node --no-warnings --experimental-test-module-mocks --experimental-test-snapshots --experimental-strip-types --test-only --test './**/*.test.ts'"
   },
   "repository": {
     "type": "git",
@@ -22,11 +22,11 @@
     "url": "https://github.com/JakobJingleheimer/correct-ts-specifiers/issues"
   },
   "homepage": "https://github.com/JakobJingleheimer/correct-ts-specifiers#readme",
-  "dependencies": {
-    "jscodeshift": "^17.0.0"
-  },
   "devDependencies": {
     "@types/jscodeshift": "^0.11.11",
     "@types/node": "^22.3.0"
+  },
+  "dependencies": {
+    "@codemod.com/workflow": "^0.0.28"
   }
 }
