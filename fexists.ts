@@ -1,4 +1,4 @@
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { access, constants } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
@@ -12,9 +12,10 @@ export function fexists(
 	const path = URL.canParse(specifier)
 		? fileURLToPath(specifier)
 		: specifier;
+	const resolvedSpecifier = resolve(dirname(parent), path);
 
 	return access(
-		resolve(parent, path),
+		resolvedSpecifier,
 		constants.F_OK,
 	)
 	.then(

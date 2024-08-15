@@ -1,4 +1,4 @@
-import assert from 'node:assert';
+import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
 
@@ -16,11 +16,11 @@ describe('fexists', () => {
 
 		const { fexists } = await import('./fexists.ts');
 
-		assert.equal(await fexists('/tmp', 'exists.js'), true);
+		assert.equal(await fexists('/tmp/test.ts', 'exists.js'), true);
 
 		mock__access.mock.mockImplementationOnce(async () => {
 			throw Object.assign(new Error('ENOENT'), { code: 'ENOENT'})
 		});
-		assert.equal(await fexists('/tmp', 'noexists.js'), false);
+		assert.equal(await fexists('/tmp/test.ts', 'noexists.js'), false);
 	})
 });

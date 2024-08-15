@@ -1,3 +1,4 @@
+import assert from 'node:assert/strict';
 import { resolve } from 'node:path';
 import { describe, it } from 'node:test';
 
@@ -8,18 +9,39 @@ import { mapImports } from './map-imports.ts';
 // import { Zed } from './zed.fixture.js';
 // import 'node:console';
 
-describe.only('Correcting ts file extensions', () => {
-	const path = resolve('./fixture.ts');
+describe('Correcting ts file extensions', () => {
+	const originatingFilePath = resolve('./test.ts');
 
-	describe('simple scenario: JS file does not exist and TS file does exist', () => {
+	describe('straightforward: JS file does not exist and TS file does exist', () => {
 		it('should replace the ".js" → ".ts"', async (t) => {
-
 			const output = await mapImports(
-				path,
-				'./foo.fixture.js',
+				originatingFilePath,
+				'./fixtures/foo.js',
 			);
 
-			console.log(output);
+			assert.equal(output, './fixtures/foo.ts');
+		});
+	});
+
+	describe('straightforward: JS file does exist and TS file does not exist', () => {
+		it('should not change the file extension', async (t) => {
+			const output = await mapImports(
+				originatingFilePath,
+				'./fixtures/bar.js',
+			);
+
+			assert.equal(output, './fixtures/bar.js');
+		});
+	});
+
+	describe('ambiguous: both a JS and a TS file exist with the same name', () => {
+		it('should log and skip', async (t) => {
+			const output = await mapImports(
+				originatingFilePath,
+				'./fixtures/foo.js',
+			);
+
+			assert.equal(output, './fixtures/foo.ts');
 		});
 	});
 });
