@@ -1,0 +1,32 @@
+{
+  "name": "correct-ts-specifiers",
+  "version": "1.0.0",
+  "description": "Replace erroneous 'js' or omitted file extensions of import specifiers in TypeScript files.",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "test": "node --no-warnings --experimental-strip-types --test ./main.test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JakobJingleheimer/correct-ts-specifiers.git"
+  },
+  "keywords": [
+    "codemod",
+    "esm",
+    "typescript"
+  ],
+  "author": "Jacob Smith",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JakobJingleheimer/correct-ts-specifiers/issues"
+  },
+  "homepage": "https://github.com/JakobJingleheimer/correct-ts-specifiers#readme",
+  "dependencies": {
+    "jscodeshift": "^17.0.0"
+  },
+  "devDependencies": {
+    "@types/jscodeshift": "^0.11.11",
+    "@types/node": "^22.3.0"
+  }
+}
