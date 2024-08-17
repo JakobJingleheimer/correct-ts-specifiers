@@ -9,13 +9,12 @@ export function fexists(
 	parent: FSPath,
 	specifier: Specifier,
 ) {
-	const path = URL.canParse(specifier)
+	const resolvedPath = URL.canParse(specifier)
 		? fileURLToPath(specifier)
-		: specifier;
-	const resolvedSpecifier = resolve(dirname(parent), path);
+		: resolve(dirname(parent), specifier);
 
 	return access(
-		resolvedSpecifier,
+		resolvedPath,
 		constants.F_OK,
 	)
 	.then(
