@@ -19,7 +19,7 @@ type Exts = typeof import('./replace-js-ext-with-ts-ext.ts').exts;
 type Logger = typeof import('./logger.ts').logger;
 type ReplaceJSExtWithTSExt = typeof import('./replace-js-ext-with-ts-ext.ts').replaceJSExtWithTSExt;
 
-describe.only('Correcting ts file extensions', () => {
+describe('Correcting ts file extensions', () => {
 	const originatingFilePath = resolve('./test.ts');
 	let mock__log: Mock<Logger>['mock'];
 	let mock__logger: MockModuleContext;
