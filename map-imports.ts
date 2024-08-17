@@ -1,6 +1,6 @@
 import type { FSPath, Specifier } from './index.d.ts';
 import { fexists } from './fexists.ts';
-import { logger } from './logger.ts';
+import { logger } from './logger.js';
 import { replaceJSExtWithTSExt } from './replace-js-ext-with-ts-ext.ts';
 
 
@@ -23,7 +23,7 @@ export const mapImports = async (
 		if (await fexists(filePath, specifier)) {
 			logger('warn', [
 				`Import specifier '${specifier}' within ${filePath} contains a JS extension AND a file`,
-				`with the corresponding TS extension exists. Impossible to disambiguate (skipping).`,
+				`with the corresponding TS extension exists. Cannot disambiguate (skipping).`,
 			].join(' '));
 
 			return;
