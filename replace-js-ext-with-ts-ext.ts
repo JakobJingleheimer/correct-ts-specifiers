@@ -2,6 +2,7 @@ import { extname } from 'node:path';
 
 import type { FSPath, Specifier } from './index.d.ts';
 import { fexists } from './fexists.ts';
+import { logger } from './logger.js';
 
 
 export const replaceJSExtWithTSExt = async (
@@ -9,17 +10,27 @@ export const replaceJSExtWithTSExt = async (
 	specifier: Specifier,
 	oExt = extname(specifier) as JSExt, // Don't like this here
 	rExt: TSExt | DExt = exts[oExt],
-) => {
-	let specifierWithTSExt = specifier.replace(oExt, rExt!);
+): Promise<{ replacement: FSPath | null, isType?: boolean }> => {
+	let replacement = specifier.replace(oExt, rExt!);
 
-	if (await fexists(filePath, specifierWithTSExt)) return specifierWithTSExt;
+	if (await fexists(filePath, replacement)) return { replacement, isType: false };
 
+	const dFound = new Set();
 	for (const dExt of dExts) {
-		specifierWithTSExt = specifier.replace(oExt, dExt);
-		if (await fexists(filePath, specifierWithTSExt)) return specifierWithTSExt;
+		const potential = specifier.replace(oExt, dExt);
+		if (await fexists(filePath, potential)) dFound.add(replacement = potential);
 	}
 
-	return null;
+	if (dFound.size) {
+		if (dFound.size === 1) return { replacement, isType: true };
+
+		logger('error', [
+			`"${specifier}" appears to resolve to a declaration file, but multiple declaration files`,
+			`were found. Cannot disambiguate between "${Array.from(dFound).join('", "')}" (skipping).`,
+		].join(' '));
+	}
+
+	return { replacement: null };
 };
 
 export const exts = {
