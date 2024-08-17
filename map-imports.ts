@@ -7,38 +7,34 @@ import { replaceJSExtWithTSExt } from './replace-js-ext-with-ts-ext.ts';
 export const mapImports = async (
 	filePath: FSPath,
 	specifier: Specifier,
-) => {
-	console.log({
-		filePath,
-		specifier
-	});
+): Promise<{
+	isType?: boolean;
+	replacement?: string;
+}> => {
+	if (bareSpecifier.test(specifier)) return {};
 
-	let replacement = await replaceJSExtWithTSExt(filePath, specifier);
-
-	console.log('replacement', replacement);
+	let { isType, replacement} = await replaceJSExtWithTSExt(filePath, specifier);
 
 	if (replacement) {
-		console.log('replacement found', replacement);
-
 		if (await fexists(filePath, specifier)) {
 			logger('warn', [
-				`Import specifier '${specifier}' within ${filePath} contains a JS extension AND a file`,
+				`Import specifier "${specifier}" within ${filePath} contains a JS extension AND a file`,
 				`with the corresponding TS extension exists. Cannot disambiguate (skipping).`,
 			].join(' '));
 
-			return;
+			return {};
 		}
 
-		console.log('using replacement', replacement);
-
-		return replacement;
+		return { isType, replacement };
 	}
 
-	replacement = await replaceJSExtWithTSExt(filePath, specifier, undefined, '.d.ts');
+	({ replacement } = await replaceJSExtWithTSExt(filePath, specifier, undefined, '.d.ts'));
 
-	if (replacement) return replacement;
+	if (replacement) return { isType, replacement };
 
-	logger('error', `Could not figure out what to do for '${specifier}' within ${filePath}`);
+	logger('error', `No matching file found for "${specifier}" within ${filePath}`);
 
-	return;
+	return {};
 }
+
+const bareSpecifier = /^[\w:/@]+$/;
