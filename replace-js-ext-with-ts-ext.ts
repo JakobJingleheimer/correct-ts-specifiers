@@ -10,7 +10,10 @@ export const replaceJSExtWithTSExt = async (
 	specifier: Specifier,
 	oExt = extname(specifier) as JSExt, // Don't like this here
 	rExt: TSExt | DExt = exts[oExt],
-): Promise<{ replacement: FSPath | null, isType?: boolean }> => {
+): Promise<{
+	isType?: boolean,
+	replacement: FSPath | null,
+}> => {
 	let replacement = specifier.replace(oExt, rExt!);
 
 	if (await fexists(filePath, replacement)) return { replacement, isType: false };
