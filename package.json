@@ -23,7 +23,6 @@
   },
   "homepage": "https://github.com/JakobJingleheimer/correct-ts-specifiers#readme",
   "devDependencies": {
-    "@types/jscodeshift": "^0.11.11",
     "@types/node": "^22.3.0"
   },
   "dependencies": {
