@@ -49,6 +49,11 @@ describe('fexists', () => {
 			mock__fs.restore();
 		});
 
+		it.skip('should return `true` for a bare specifier', async () => {
+			assert.equal(await fexists(import.meta.resolve('./fixtures/e2e/test.js'), 'dep1'), true);
+			assert.equal(mock__access.calls[0].arguments[0], import.meta.resolve('./fixtures/e2e/node_modules/dep1/foo.js'), 'resolved specifier');
+		});
+
 		it('should return `true` for a relative specifier', async () => {
 			assert.equal(await fexists(parentPath, 'exists.js'), true);
 			assert.equal(mock__access.calls[0].arguments[0], 'file:///tmp/exists.js', 'resolved specifier');
