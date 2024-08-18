@@ -1,6 +1,7 @@
 import type { FSPath, Specifier } from './index.d.ts';
 import { fexists } from './fexists.ts';
 import { logger } from './logger.js';
+import { isIgnorableSpecifier } from './isIgnorableSpecifier.ts';
 import { replaceJSExtWithTSExt } from './replace-js-ext-with-ts-ext.ts';
 
 
@@ -11,7 +12,7 @@ export const mapImports = async (
 	isType?: boolean;
 	replacement?: string;
 }> => {
-	if (bareSpecifier.test(specifier)) return {};
+	if (isIgnorableSpecifier(specifier)) return {};
 
 	let { isType, replacement} = await replaceJSExtWithTSExt(filePath, specifier);
 
@@ -36,5 +37,3 @@ export const mapImports = async (
 
 	return {};
 }
-
-const bareSpecifier = /^[\w:/@]+$/;

@@ -5,6 +5,7 @@ import {
 	describe,
 	it,
 	mock,
+	afterEach,
 } from 'node:test';
 import { fileURLToPath} from 'node:url';
 
@@ -30,6 +31,10 @@ describe('Correcting ts file extensions', () => {
 		});
 
 		({ mapImports } = await import('./map-imports.ts'));
+	});
+
+	afterEach(() => {
+		mock__log.resetCalls();
 	});
 
 	it('unambiguous: should skip specifier is a node builtin', async () => {
@@ -59,6 +64,26 @@ describe('Correcting ts file extensions', () => {
 		);
 
 		assert.equal(output.replacement, undefined);
+		assert.notEqual(output.isType, true);
+	});
+
+	it('quasi-ambiguous: should append TS extension when path resolves to a file', async () => {
+		let specifier = './fixtures/bar';
+		let output = await mapImports(
+			originatingFilePath,
+			specifier,
+		);
+
+		assert.equal(output.replacement, `${specifier}.js`);
+		assert.notEqual(output.isType, true);
+
+		specifier = './fixtures/foo';
+		output = await mapImports(
+			originatingFilePath,
+			specifier,
+		);
+
+		assert.equal(output.replacement, `${specifier}.ts`);
 		assert.notEqual(output.isType, true);
 	});
 
