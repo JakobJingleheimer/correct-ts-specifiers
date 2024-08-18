@@ -1,3 +1,5 @@
+import { extname } from 'node:path';
+
 import type { FSPath, Specifier } from './index.d.ts';
 import { fexists } from './fexists.ts';
 import { logger } from './logger.js';
@@ -13,8 +15,9 @@ export const mapImports = async (
 	replacement?: string;
 }> => {
 	if (isIgnorableSpecifier(specifier)) return {};
+	if (!extname(specifier)) specifier += '.js';
 
-	let { isType, replacement} = await replaceJSExtWithTSExt(filePath, specifier);
+	let { isType, replacement } = await replaceJSExtWithTSExt(filePath, specifier);
 
 	if (replacement) {
 		if (await fexists(filePath, specifier)) {
@@ -23,7 +26,7 @@ export const mapImports = async (
 				`with the corresponding TS extension exists. Cannot disambiguate (skipping).`,
 			].join(' '));
 
-			return {};
+			return { isType, replacement: specifier };
 		}
 
 		return { isType, replacement };
