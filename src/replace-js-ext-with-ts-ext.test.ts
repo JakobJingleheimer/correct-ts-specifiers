@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { resolve } from 'node:path';
 import {
 	type Mock,
 	before,
@@ -9,6 +8,7 @@ import {
 	afterEach,
 	after,
 } from 'node:test';
+import { fileURLToPath} from 'node:url';
 
 
 type MockModuleContext = ReturnType<typeof mock.module>;
@@ -20,7 +20,7 @@ type Logger = typeof import('./logger.ts').logger;
 type ReplaceJSExtWithTSExt = typeof import('./replace-js-ext-with-ts-ext.ts').replaceJSExtWithTSExt;
 
 describe('Correcting ts file extensions', () => {
-	const originatingFilePath = resolve('./test.ts');
+	const originatingFilePath = fileURLToPath(import.meta.resolve('./test.ts'));
 	let mock__log: Mock<Logger>['mock'];
 	let mock__logger: MockModuleContext;
 	let dExts: DExts;

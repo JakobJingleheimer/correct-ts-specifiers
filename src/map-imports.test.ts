@@ -1,5 +1,4 @@
 import assert from 'node:assert/strict';
-import { resolve } from 'node:path';
 import {
 	type Mock,
 	before,
@@ -7,6 +6,7 @@ import {
 	it,
 	mock,
 } from 'node:test';
+import { fileURLToPath} from 'node:url';
 
 import { dExts } from './replace-js-ext-with-ts-ext.ts';
 
@@ -17,7 +17,7 @@ type Logger = typeof import('./logger.ts').logger;
 type MapImports = typeof import('./map-imports.ts').mapImports;
 
 describe('Correcting ts file extensions', () => {
-	const originatingFilePath = resolve('./test.ts');
+	const originatingFilePath = fileURLToPath(import.meta.resolve('./test.ts'));
 	let mock__log: Mock<Logger>['mock'];
 	let mock__logger: MockModuleContext;
 	let mapImports: MapImports;
@@ -62,7 +62,7 @@ describe('Correcting ts file extensions', () => {
 		assert.notEqual(output.isType, true);
 	});
 
-	it('unambiguous: should replace ".js" → ".ts" when JS file does NOT exist and TS file DOES exist', async () => {
+	it('unambiguous: should replace ".js" → ".ts" when JS file does NOT exist & TS file DOES exist', async () => {
 		const specifier = './fixtures/noexist.js';
 		const output = await mapImports(
 			originatingFilePath,
@@ -78,7 +78,7 @@ describe('Correcting ts file extensions', () => {
 		assert.match(err, new RegExp(originatingFilePath));
 	});
 
-	it('unambiguous: should not change the file extension when JS file DOES exist and TS file does NOT exist', async () => {
+	it('unambiguous: should not change the file extension when JS file DOES exist & TS file does NOT exist', async () => {
 		const specifier = './fixtures/bar.js';
 		const output = await mapImports(
 			originatingFilePath,
@@ -89,7 +89,7 @@ describe('Correcting ts file extensions', () => {
 		assert.notEqual(output.isType, true);
 	});
 
-	it('unambiguous: should replace should replace ".js" → ".d…" when JS file does NOT exist and a declaration file exists', async () => {
+	it('unambiguous: should replace ".js" → ".d…" when JS file does NOT exist & a declaration file exists', async () => {
 		for (const dExt of dExts) {
 			const extType = dExt.split('.').pop();
 			const specifierBase = `./fixtures/d/unambiguous/${extType}/index`;
@@ -103,7 +103,7 @@ describe('Correcting ts file extensions', () => {
 		}
 	});
 
-	it('ambiguous: should log and skip when both a JS and a TS file exist with the same name', async () => {
+	it('ambiguous: should log and skip when both a JS & a TS file exist with the same name', async () => {
 		const output = await mapImports(
 			originatingFilePath,
 			'./fixtures/foo.js',

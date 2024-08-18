@@ -1,6 +1,6 @@
 import type { Api } from "@codemod.com/workflow";
 
-import { mapImports } from 'map-imports.ts';
+import { mapImports } from './map-imports.ts';
 
 
 export async function workflow({ contexts, files }: Api) {
