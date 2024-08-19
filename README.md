@@ -1,4 +1,4 @@
-This codemod transforms import specifiers in source-code from the broken state TypeScript's compiler (`tsc`) requires into proper ones. This is a one-and-done process, and the updated source-code should be committed to your version control (eg git).
+This codemod transforms import specifiers in source-code from the broken state TypeScript's compiler (`tsc`) requires into proper ones. This is a one-and-done process, and the updated source-code should be committed to your version control (eg git); thereafter, source-code import statements should be authored to be compliant with the ECMAScript (JavaScript) standard.
 
 This is useful when source-code is processed by standards-compliant software like Node.js.
 
