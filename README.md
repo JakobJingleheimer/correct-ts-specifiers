@@ -12,7 +12,7 @@ import { PathLike } from 'node:path';
 import { Cat } from './Cat';
 import { baseUrl } from './config.js';
 
-export { zed } from './zed';
+export { Zed } from './zed';
 
 export const makeLink = (path: PathLike) => (new URL(path, baseUrl)).href;
 
