@@ -1,21 +1,21 @@
 import { dirname } from 'node:path';
 import { access, constants } from 'node:fs/promises';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import type { FSPath, Specifier } from './index.d.ts';
 
 
 export function fexists(
-	parent: FSPath,
+	parentPath: FSPath,
 	specifier: Specifier,
 ) {
-	const parentPath = `${pathToFileURL(dirname(parent)).href}/`;
-	const resolvedPath = URL.canParse(specifier)
+	const parentUrl = `${pathToFileURL(dirname(parentPath)).href}/`;
+	const resolvedSpecifier = URL.canParse(specifier)
 		? specifier
-		: import.meta.resolve((new URL(specifier, parentPath)).href);
+		: fileURLToPath(import.meta.resolve((new URL(specifier, parentUrl)).href));
 
 	return access(
-		resolvedPath,
+		resolvedSpecifier,
 		constants.F_OK,
 	)
 	.then(

@@ -6,22 +6,29 @@ import { logger } from './logger.js';
 
 
 export const replaceJSExtWithTSExt = async (
-	filePath: FSPath,
+	parentPath: FSPath,
 	specifier: Specifier,
-	oExt = extname(specifier) as JSExt, // Don't like this here
-	rExt: TSExt | DExt = exts[oExt],
+	rExt?: TSExt | DExt,
 ): Promise<{
 	isType?: boolean,
 	replacement: FSPath | null,
 }> => {
-	let replacement = specifier.replace(oExt, rExt!);
+	if (!extname(specifier)) {
+		specifier += '.js';
 
-	if (await fexists(filePath, replacement)) return { replacement, isType: false };
+		if (await fexists(parentPath, specifier)) return { replacement: specifier, isType: false };
+	}
+
+	const oExt = extname(specifier) as JSExt;
+
+	let replacement = composeReplacement(specifier, oExt, rExt ?? exts[oExt]);
+
+	if (await fexists(parentPath, replacement)) return { replacement, isType: false };
 
 	const dFound = new Set();
 	for (const dExt of dExts) {
-		const potential = specifier.replace(oExt, dExt);
-		if (await fexists(filePath, potential)) dFound.add(replacement = potential);
+		const potential = composeReplacement(specifier, oExt, dExt);
+		if (await fexists(parentPath, potential)) dFound.add(replacement = potential);
 	}
 
 	if (dFound.size) {
@@ -37,6 +44,7 @@ export const replaceJSExtWithTSExt = async (
 };
 
 export const exts = {
+	'': '.js',
 	'.cjs': '.cts',
 	'.mjs': '.mts',
 	'.js': '.ts',
@@ -51,3 +59,11 @@ export const dExts = [
 	'.d.mts',
 ] as const;
 export type DExt = typeof dExts[number];
+
+const composeReplacement = (
+	specifier:Specifier,
+	oExt: JSExt,
+	rExt: TSExt | DExt,
+) => oExt
+	? specifier.replace(oExt, rExt)
+	: `${specifier}${rExt}`;

@@ -52,7 +52,10 @@ describe('Correcting ts file extensions', () => {
 	describe('mapped extension exists', () => {
 		describe('unambiguous match', () => {
 			it('should return an updated specifier', async () => {
-				for (const jsExt of Object.keys(exts) as JSExt[]) {
+				const jsExts = Object.keys(exts);
+				jsExts.splice(jsExts.indexOf(''), 1); // remove ''
+
+				for (const jsExt of jsExts as JSExt[]) {
 					const output = await replaceJSExtWithTSExt(
 						originatingFilePath,
 						`./fixtures/rep${jsExt}`,

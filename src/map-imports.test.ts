@@ -17,7 +17,7 @@ type MockModuleContext = ReturnType<typeof mock.module>;
 type Logger = typeof import('./logger.ts').logger;
 type MapImports = typeof import('./map-imports.ts').mapImports;
 
-describe('Correcting ts file extensions', () => {
+describe('Map Imports', () => {
 	const originatingFilePath = fileURLToPath(import.meta.resolve('./test.ts'));
 	let mock__log: Mock<Logger>['mock'];
 	let mock__logger: MockModuleContext;
@@ -68,17 +68,19 @@ describe('Correcting ts file extensions', () => {
 	});
 
 	it('quasi-ambiguous: should append TS extension when path resolves to a file', async () => {
-		let specifier = './fixtures/bar';
-		let output = await mapImports(
+		const specifier = './fixtures/bar';
+		const output = await mapImports(
 			originatingFilePath,
 			specifier,
 		);
 
 		assert.equal(output.replacement, `${specifier}.js`);
 		assert.notEqual(output.isType, true);
+	});
 
-		specifier = './fixtures/foo';
-		output = await mapImports(
+	it('quasi-ambiguous: should append TS extension when path resolves to a file', async () => {
+		const specifier = './fixtures/foo';
+		const output = await mapImports(
 			originatingFilePath,
 			specifier,
 		);
