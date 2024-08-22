@@ -7,7 +7,7 @@ import {
 	mock,
 	afterEach,
 } from 'node:test';
-import { fileURLToPath} from 'node:url';
+import { resolve } from 'node:path';
 
 import { dExts } from './replace-js-ext-with-ts-ext.ts';
 
@@ -18,7 +18,7 @@ type Logger = typeof import('./logger.ts').logger;
 type MapImports = typeof import('./map-imports.ts').mapImports;
 
 describe('Map Imports', () => {
-	const originatingFilePath = fileURLToPath(import.meta.resolve('./test.ts'));
+	const originatingFilePath = resolve('./test.ts');
 	let mock__log: Mock<Logger>['mock'];
 	let mock__logger: MockModuleContext;
 	let mapImports: MapImports;

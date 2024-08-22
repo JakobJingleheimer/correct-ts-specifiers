@@ -1,7 +1,5 @@
-import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
-import { readFile } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 import {
 	describe,
 	it,
@@ -10,7 +8,7 @@ import {
 
 describe('workflow', () => {
 	it('should', async () => {
-		const e2eFixtPath = fileURLToPath(import.meta.resolve('./fixtures/e2e/'));
+		const e2eFixtPath = resolve('./fixtures/e2e/');
 
 		await spawnPromisified('codemod', ['../../workflow.ts'], {
 			cwd: e2eFixtPath,

@@ -8,6 +8,7 @@ import {
 	it,
 	mock,
 } from 'node:test';
+import { resolve } from 'node:path';
 
 
 type FSAccess = typeof import('node:fs/promises').access;
@@ -54,8 +55,8 @@ describe('fexists', () => {
 		});
 
 		it.skip('should return `true` for a bare specifier', async () => {
-			assert.equal(await fexists(import.meta.resolve('./fixtures/e2e/test.js'), 'dep1'), true);
-			assert.equal(mock__access.calls[0].arguments[0], import.meta.resolve('./fixtures/e2e/node_modules/dep1/foo.js'), 'resolved specifier');
+			assert.equal(await fexists(resolve('./fixtures/e2e/test.js'), 'dep1'), true);
+			assert.equal(mock__access.calls[0].arguments[0], resolve('./fixtures/e2e/node_modules/dep1/foo.js'), 'resolved specifier');
 		});
 
 		it('should return `true` for a relative specifier', async () => {
