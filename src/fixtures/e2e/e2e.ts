@@ -11,4 +11,5 @@ export const makeLink = (path: URL) => (new URL(path, baseUrl)).href;
 
 const cat = new Cat();
 
+console.log('cat:', cat);
 console.log('foo:', foo);
