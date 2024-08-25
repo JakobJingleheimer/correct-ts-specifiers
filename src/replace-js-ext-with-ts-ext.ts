@@ -1,6 +1,13 @@
 import { extname } from 'node:path';
 
 import type { FSPath, Specifier } from './index.d.ts';
+import {
+	type DExt,
+	type JSExt,
+	type TSExt,
+	suspectExts,
+	dExts,
+} from './exts.ts';
 import { fexists } from './fexists.ts';
 import { logger } from './logger.js';
 
@@ -21,7 +28,7 @@ export const replaceJSExtWithTSExt = async (
 
 	const oExt = extname(specifier) as JSExt;
 
-	let replacement = composeReplacement(specifier, oExt, rExt ?? exts[oExt]);
+	let replacement = composeReplacement(specifier, oExt, rExt ?? suspectExts[oExt]);
 
 	if (await fexists(parentPath, replacement)) return { replacement, isType: false };
 
@@ -34,7 +41,9 @@ export const replaceJSExtWithTSExt = async (
 	if (dFound.size) {
 		if (dFound.size === 1) return { replacement, isType: true };
 
-		logger('error', [
+		logger(
+			parentPath,
+			'error', [
 			`"${specifier}" appears to resolve to a declaration file, but multiple declaration files`,
 			`were found. Cannot disambiguate between "${Array.from(dFound).join('", "')}" (skipping).`,
 		].join(' '));
@@ -42,23 +51,6 @@ export const replaceJSExtWithTSExt = async (
 
 	return { replacement: null };
 };
-
-export const exts = {
-	'': '.js',
-	'.cjs': '.cts',
-	'.mjs': '.mts',
-	'.js': '.ts',
-	'.jsx': '.tsx',
-} as const;
-export type JSExt = keyof typeof exts;
-export type TSExt = typeof exts[JSExt];
-
-export const dExts = [
-	'.d.cts',
-	'.d.ts',
-	'.d.mts',
-] as const;
-export type DExt = typeof dExts[number];
 
 const composeReplacement = (
 	specifier:Specifier,

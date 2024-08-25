@@ -9,7 +9,7 @@ import {
 } from 'node:test';
 import { fileURLToPath} from 'node:url';
 
-import { dExts } from './replace-js-ext-with-ts-ext.ts';
+import { dExts } from './exts.ts';
 
 
 type MockModuleContext = ReturnType<typeof mock.module>;
@@ -99,10 +99,13 @@ describe('Map Imports', () => {
 		assert.equal(output.replacement, undefined);
 		assert.notEqual(output.isType, true);
 
-		const err = mock__log.calls[0].arguments[1];
-		assert.match(err, /no match/i);
-		assert.match(err, new RegExp(specifier));
-		assert.match(err, new RegExp(originatingFilePath));
+		const {
+			0: sourcePath,
+			2: msg,
+		} = mock__log.calls[0].arguments;
+		assert.match(sourcePath, new RegExp(originatingFilePath));
+		assert.match(msg, /no match/i);
+		assert.match(msg, new RegExp(specifier));
 	});
 
 	it('unambiguous: should not change the file extension when JS file DOES exist & TS file does NOT exist', async () => {

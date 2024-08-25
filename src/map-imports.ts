@@ -20,8 +20,10 @@ export const mapImports = async (
 
 	if (replacement) {
 		if (await fexists(parentPath, specifier)) {
-			logger('warn', [
-				`Import specifier "${specifier}" within ${parentPath} contains a JS extension AND a file`,
+			logger(
+				parentPath,
+				'warn', [
+				`Import specifier "${specifier}" contains a JS extension AND a file`,
 				`with the corresponding TS extension exists. Cannot disambiguate (skipping).`,
 			].join(' '));
 
@@ -35,7 +37,11 @@ export const mapImports = async (
 
 	if (replacement) return { isType, replacement };
 
-	logger('error', `No matching file found for "${specifier}" within ${parentPath}`);
+	logger(
+		parentPath,
+		'error',
+		`No matching file found for "${specifier}"`,
+	);
 
 	return {};
 }
