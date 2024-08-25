@@ -1,5 +1,5 @@
-import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
+import { resolve } from 'node:path';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import {
@@ -9,7 +9,7 @@ import {
 
 
 describe('workflow', () => {
-	it('should', async () => {
+	it('should', async (t) => {
 		const e2eFixtPath = fileURLToPath(import.meta.resolve('./fixtures/e2e/'));
 
 		await spawnPromisified('node', [
@@ -19,6 +19,10 @@ describe('workflow', () => {
     ], {
 			cwd: e2eFixtPath,
 		});
+
+    const result = await readFile(resolve(e2eFixtPath, 'e2e.ts'), { encoding: 'utf-8' });
+
+    t.assert.snapshot(result);
 	});
 });
 

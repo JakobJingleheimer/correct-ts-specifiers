@@ -5,7 +5,7 @@
   "type": "module",
   "main": "main.js",
   "scripts": {
-    "test": "node --no-warnings --experimental-test-module-mocks --experimental-test-snapshots --experimental-strip-types --test './**/*.test.ts'"
+    "test": "node --no-warnings --experimental-import-meta-resolve --experimental-test-module-mocks --experimental-test-snapshots --experimental-strip-types --test './**/*.test.ts'"
   },
   "repository": {
     "type": "git",

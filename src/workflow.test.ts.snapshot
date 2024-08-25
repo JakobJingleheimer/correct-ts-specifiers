@@ -1,0 +1,3 @@
+exports[`workflow > should 1`] = `
+"import { URL } from 'node:url';\\n\\nimport { foo } from 'dep1';\\n\\nimport { Cat } from './Cat.ts';\\nimport { Dog } from './Dog/index.mjs';\\nimport { baseUrl } from './config.js';\\nexport { Zed } from './zed';\\n\\n// should be unchanged\\n\\nexport const makeLink = (path: URL) => (new URL(path, baseUrl)).href;\\n\\nconst cat = new Cat('Milo');\\nconst dog = new Dog('Otis');\\n\\nconsole.log('cat:', cat);\\nconsole.log('dog:', dog);\\nconsole.log('foo:', foo);\\n"
+`;
