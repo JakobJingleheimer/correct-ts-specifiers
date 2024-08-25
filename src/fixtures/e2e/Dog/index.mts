@@ -1,3 +1,3 @@
-export class Cat {
+export class Dog {
 	constructor(public name: string) {}
 }
