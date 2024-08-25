@@ -37,7 +37,7 @@ export const mapImports = async (
 
 	if (replacement) return { isType, replacement };
 
-	logger(
+	if (!await fexists(parentPath, specifier)) logger(
 		parentPath,
 		'error',
 		`No matching file found for "${specifier}"`,
