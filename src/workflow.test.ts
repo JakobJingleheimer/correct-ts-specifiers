@@ -12,7 +12,11 @@ describe('workflow', () => {
 	it('should', async () => {
 		const e2eFixtPath = fileURLToPath(import.meta.resolve('./fixtures/e2e/'));
 
-		await spawnPromisified('codemod', ['../../workflow.ts'], {
+		await spawnPromisified('node', [
+      '--no-warnings',
+      '--experimental-strip-types',
+      '../../workflow.ts',
+    ], {
 			cwd: e2eFixtPath,
 		});
 	});

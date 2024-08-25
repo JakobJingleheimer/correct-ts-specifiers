@@ -63,4 +63,4 @@ export async function workflow({ contexts, files }: Api) {
 
 const globPattern = '**/*.{cjs,mjs,js,jsx,?(d.)cts,?(d.)mts,?(d.)ts,tsx}';
 
-workflow(api).then(console.log);
+workflow(api);
