@@ -14,7 +14,7 @@ export const mapImports = async (
 	isType?: boolean;
 	replacement?: string;
 }> => {
-	if (isIgnorableSpecifier(specifier)) return {};
+	if (isIgnorableSpecifier(parentPath, specifier)) return {};
 
 	let { isType, replacement } = await replaceJSExtWithTSExt(parentPath, specifier);
 
