@@ -8,27 +8,41 @@ This is useful when source-code is processed by standards-compliant software lik
 Before:
 
 ```ts
-import { PathLike } from 'node:path';
-import { Cat } from './Cat';
-import { baseUrl } from './config.js';
+import { URL } from 'node:url';
 
+import { bar } from '@dep/bar';
+import { foo } from 'foo';
+
+import { Cat } from './Cat.ts';
+import { Dog } from './Dog/index.mjs';
+import { baseUrl } from './config.js';
 export { Zed } from './zed';
 
-export const makeLink = (path: PathLike) => (new URL(path, baseUrl)).href;
+// should be unchanged
 
-const cat = new Cat();
+export const makeLink = (path: URL) => (new URL(path, baseUrl)).href;
+
+const cat = new Cat('Milo');
+const dog = new Dog('Otis');
 ```
 
 After:
 
 ```ts
-import type { PathLike } from 'node:path';
-import { Cat } from './Cat.ts';
-import { baseUrl } from './config.js';
+import { URL } from 'node:url';
 
+import { bar } from '@dep/bar';
+import { foo } from 'foo';
+
+import { Cat } from './Cat.ts';
+import { Dog } from './Dog/index.mts';
+import { baseUrl } from './config.js';
 export type { Zed } from './zed.d.ts';
 
-export const makeLink = (path: PathLike) => (new URL(path, baseUrl)).href;
+// should be unchanged
 
-const cat = new Cat();
+export const makeLink = (path: URL) => (new URL(path, baseUrl)).href;
+
+const cat = new Cat('Milo');
+const dog = new Dog('Otis');
 ```
