@@ -29,10 +29,15 @@ export function isIgnorableSpecifier(
 		const resolvedSpecifier = import.meta.resolve(specifier, pathToFileURL(parentPath));
 		if (dirname(resolvedSpecifier).includes('node_modules')) return true; // [1] is a node_module
 	} catch (err) { // @ts-ignore (TS requires type of err to be unknown)
-		if (err?.code !== 'ERR_MODULE_NOT_FOUND') throw err;
+		if (!IGNORABLE_RESOLVE_ERRORS.has(err?.code)) throw err;
 	}
 
 	return false;
 }
+
+const IGNORABLE_RESOLVE_ERRORS = new Set([
+	'ERR_MODULE_NOT_FOUND',
+	'ERR_PACKAGE_PATH_NOT_EXPORTED', // This is a problem with the node_module itself
+]);
 
 // [1] The second argument of `import.meta.resolve()` requires `--experimental-import-meta-resolve`
