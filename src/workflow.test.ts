@@ -9,7 +9,7 @@ import {
 
 
 describe('workflow', () => {
-	it('should', async (t) => {
+	it('should update bad specifiers and ignore good ones', async (t) => {
 		const e2eFixtPath = fileURLToPath(import.meta.resolve('./fixtures/e2e/'));
 
 		await spawnPromisified('node', [

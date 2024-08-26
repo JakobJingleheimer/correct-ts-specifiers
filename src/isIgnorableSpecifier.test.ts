@@ -3,12 +3,14 @@ import {
 	describe,
 	it,
 } from 'node:test';
+import { fileURLToPath } from 'node:url';
 
+import { tsExts } from './exts.ts';
 import { isIgnorableSpecifier } from './isIgnorableSpecifier.ts';
 
 
 describe('Is ignorable specifier', () => {
-	const parentPath = 'file:///tmp/test.ts';
+	const parentPath = '/tmp/test.ts';
 
 	it('should ignore node builtins', () => {
 		assert.equal(isIgnorableSpecifier(parentPath, 'node:test'), true);
@@ -18,6 +20,19 @@ describe('Is ignorable specifier', () => {
 		assert.equal(isIgnorableSpecifier(parentPath, 'data:,export const foo = "foo"'), true);
 		assert.equal(isIgnorableSpecifier(parentPath, 'data:text/plain,export const foo = "foo"'), true);
 		assert.equal(isIgnorableSpecifier(parentPath, 'data:text/plain;base64,ZXhwb3J0IGNvbnN0IGZvbyA9ICJmb28i'), true);
+	});
+
+	it('should ignore TS file extensions', () => {
+		for (const tsExt of tsExts) {
+			assert.equal(isIgnorableSpecifier(parentPath, `tmp${tsExt}`), true);
+			assert.equal(isIgnorableSpecifier(parentPath, `tmp/foo${tsExt}`), true);
+			assert.equal(isIgnorableSpecifier(parentPath, `@tmp/foo${tsExt}`), true);
+		}
+	});
+
+	it('should ignore node_modules', () => {
+		const parentPath = fileURLToPath(import.meta.resolve('./fixtures/e2e/e2e.ts'));
+		assert.equal(isIgnorableSpecifier(parentPath, 'foo'), true);
 	});
 
 	it('should NOT ignore absolute paths', () => {

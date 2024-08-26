@@ -12,11 +12,12 @@ export async function workflow({ contexts, files }: Api) {
 
 	async function processModule({ astGrep }: Helpers) {
 		const filepath = contexts.getFileContext().file; // absolute fs path
+
 		await astGrep({
 			rule: {
 				any: [
-					{ kind: "import_statement" },
-					{ kind: "export_statement" },
+					{ kind: 'import_statement' },
+					{ kind: 'export_statement', has: { kind: 'string' } },
 				],
 			},
 		})
@@ -24,10 +25,8 @@ export async function workflow({ contexts, files }: Api) {
 			const statement = getNode();
 			const importSpecifier = statement.find({
 				rule: {
-					kind: "string_fragment",
-					inside: {
-						kind: "string",
-					},
+					kind: 'string_fragment',
+					inside: { kind: 'string' },
 				},
 			});
 

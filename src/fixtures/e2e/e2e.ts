@@ -1,6 +1,7 @@
 import { URL } from 'node:url';
 
-import { foo } from 'dep1';
+import { bar } from '@dep/bar';
+import { foo } from 'foo';
 
 import { Cat } from './Cat.ts';
 import { Dog } from './Dog/index.mjs';
@@ -17,3 +18,4 @@ const dog = new Dog('Otis');
 console.log('cat:', cat);
 console.log('dog:', dog);
 console.log('foo:', foo);
+console.log('bar:', bar);

@@ -47,26 +47,6 @@ describe('Map Imports', () => {
 		assert.notEqual(output.isType, true);
 	});
 
-	it('unambiguous: should skip bare specifier', async () => {
-		const output = await mapImports(
-			originatingFilePath,
-			'foo/bar',
-		);
-
-		assert.equal(output.replacement, undefined);
-		assert.notEqual(output.isType, true);
-	});
-
-	it('unambiguous: should skip namespaced specifier', async () => {
-		const output = await mapImports(
-			originatingFilePath,
-			'@foo/bar',
-		);
-
-		assert.equal(output.replacement, undefined);
-		assert.notEqual(output.isType, true);
-	});
-
 	it('quasi-ambiguous: should append TS extension when path resolves to a file', async () => {
 		const specifier = './fixtures/bar';
 		const output = await mapImports(

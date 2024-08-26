@@ -1,5 +1,3 @@
-import { extname } from 'node:path';
-
 import type { FSPath, Specifier } from './index.d.ts';
 import { fexists } from './fexists.ts';
 import { logger } from './logger.js';
