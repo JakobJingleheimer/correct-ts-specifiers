@@ -1,3 +1,3 @@
-exports[`workflow > should 1`] = `
+exports[`workflow > should update bad specifiers and ignore good ones 1`] = `
 "import { URL } from 'node:url';\\n\\nimport { bar } from '@dep/bar';\\nimport { foo } from 'foo';\\n\\nimport { Cat } from './Cat.ts';\\nimport { Dog } from './Dog/index.mts';\\nimport { baseUrl } from './config.js';\\nexport type { Zed } from './zed.d.ts';\\n\\n// should be unchanged\\n\\nexport const makeLink = (path: URL) => (new URL(path, baseUrl)).href;\\n\\nconst cat = new Cat('Milo');\\nconst dog = new Dog('Otis');\\n\\nconsole.log('cat:', cat);\\nconsole.log('dog:', dog);\\nconsole.log('foo:', foo);\\nconsole.log('bar:', bar);\\n"
 `;
