@@ -15,7 +15,7 @@ export function fexists(
 		// import.meta.resolve here is required because we need node's resolution algorithm to
 		// incorporate the results of any hooks that may be helping, such as ones facilitating
 		// tsconfig.compileOptions.paths
-		: fileURLToPath(import.meta.resolve((new URL(specifier, parentUrl)).href));
+		: fileURLToPath(import.meta.resolve(specifier, parentUrl));
 
 	return access(
 		resolvedSpecifier,

@@ -5,12 +5,15 @@ import { foo } from 'foo';
 
 import { Cat } from './Cat.ts';
 import { Dog } from './Dog/index.mjs';
-import { baseUrl } from './config.js';
+import { baseUrl } from '#config.js';
+
 export { Zed } from './zed';
 
 // should be unchanged
 
 export const makeLink = (path: URL) => (new URL(path, baseUrl)).href;
+
+const nil = await import('./nil.js');
 
 const cat = new Cat('Milo');
 const dog = new Dog('Otis');
@@ -19,3 +22,4 @@ console.log('cat:', cat);
 console.log('dog:', dog);
 console.log('foo:', foo);
 console.log('bar:', bar);
+console.log('nil:', nil);
