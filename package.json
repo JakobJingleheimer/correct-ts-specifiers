@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Replace erroneous 'js' or omitted file extensions of import specifiers in TypeScript files.",
   "type": "module",
-  "main": "main.js",
+  "main": "./src/workflow.ts",
   "scripts": {
+    "start": "node --no-warnings --experimental-import-meta-resolve --experimental-strip-types ./src/workflow.ts",
     "test": "node --no-warnings --experimental-import-meta-resolve --experimental-test-module-mocks --experimental-test-snapshots --experimental-strip-types --test './**/*.test.ts'"
   },
   "repository": {
