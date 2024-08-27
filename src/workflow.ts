@@ -18,6 +18,8 @@ export async function workflow({ contexts, files }: Api) {
 				any: [
 					{ kind: 'import_statement' },
 					{ kind: 'export_statement', has: { kind: 'string' } },
+					{ pattern: 'import("$$$_")' },
+					{ pattern: "import('$$$_')" },
 				],
 			},
 		})
@@ -31,7 +33,7 @@ export async function workflow({ contexts, files }: Api) {
 			});
 
 			if (!importSpecifier) return;
-
+      console.log(filepath, importSpecifier.text());
 			const { isType, replacement } = await mapImports(filepath, importSpecifier.text());
 
 			if (!replacement) return;
