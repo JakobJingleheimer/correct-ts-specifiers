@@ -11,7 +11,7 @@ export function fexists(
 ) {
 	const parentUrl = `${pathToFileURL(dirname(parentPath)).href}/`;
 	
-	let resolvedSpecifier: string;
+	let resolvedSpecifier: FSPath;
 	
   if (URL.canParse(specifier)) {
     resolvedSpecifier = specifier;
