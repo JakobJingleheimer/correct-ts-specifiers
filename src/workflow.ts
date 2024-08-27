@@ -33,7 +33,7 @@ export async function workflow({ contexts, files }: Api) {
 			});
 
 			if (!importSpecifier) return;
-      console.log(filepath, importSpecifier.text());
+
 			const { isType, replacement } = await mapImports(filepath, importSpecifier.text());
 
 			if (!replacement) return;
