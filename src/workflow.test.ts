@@ -15,6 +15,7 @@ describe('workflow', () => {
 		await spawnPromisified('node', [
       '--no-warnings',
       '--experimental-strip-types',
+      '--experimental-import-meta-resolve',
       '../../workflow.ts',
     ], {
 			cwd: e2eFixtPath,

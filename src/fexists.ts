@@ -10,12 +10,22 @@ export function fexists(
 	specifier: Specifier,
 ) {
 	const parentUrl = `${pathToFileURL(dirname(parentPath)).href}/`;
-	const resolvedSpecifier = URL.canParse(specifier)
-		? specifier
-		// import.meta.resolve here is required because we need node's resolution algorithm to
+	
+	let resolvedSpecifier: FSPath;
+	
+  if (URL.canParse(specifier)) {
+    resolvedSpecifier = specifier;
+  } else {
+    // import.meta.resolve here is required because we need node's resolution algorithm to
 		// incorporate the results of any hooks that may be helping, such as ones facilitating
 		// tsconfig.compileOptions.paths
-		: fileURLToPath(import.meta.resolve(specifier, parentUrl));
+		// error is thrown if the specifier is not resolvable from `import.meta.resolve`
+		try {
+      resolvedSpecifier = fileURLToPath(import.meta.resolve(specifier, parentUrl));
+		} catch {
+      return false;
+		}
+  }
 
 	return access(
 		resolvedSpecifier,
