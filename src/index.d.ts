@@ -1,7 +1,13 @@
+// import type { sep } from 'node:path';
+/**
+ * @example 'foo'
+ */
+type FSPathSegment = string;
 /**
  * @example '/foo/bar.js'
  */
-export type FSPath = string;
+// export type FSAbsolutePath = string & `${typeof sep}${FSPathSegment}`;
+export type FSAbsolutePath = string;
 /**
  * @example 'file:///foo/bar.js'
  */

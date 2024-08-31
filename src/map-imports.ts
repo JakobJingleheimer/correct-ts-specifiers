@@ -1,4 +1,4 @@
-import type { FSPath, Specifier } from './index.d.ts';
+import type { FSAbsolutePath, Specifier } from './index.d.ts';
 import { fexists } from './fexists.ts';
 import { logger } from './logger.js';
 import { isIgnorableSpecifier } from './isIgnorableSpecifier.ts';
@@ -6,7 +6,7 @@ import { replaceJSExtWithTSExt } from './replace-js-ext-with-ts-ext.ts';
 
 
 export const mapImports = async (
-	parentPath: FSPath,
+	parentPath: FSAbsolutePath,
 	specifier: Specifier,
 ): Promise<{
 	isType?: boolean;

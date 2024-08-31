@@ -6,11 +6,11 @@ import {
 import { pathToFileURL } from 'node:url';
 
 import { tsExts } from './exts.ts';
-import type { FSPath } from './index.d.ts';
+import type { FSAbsolutePath } from './index.d.ts';
 
 
 export function isIgnorableSpecifier(
-	parentPath: FSPath,
+	parentPath: FSAbsolutePath,
 	specifier: string,
 ) {
 	if (specifier.startsWith('node:')) return true;

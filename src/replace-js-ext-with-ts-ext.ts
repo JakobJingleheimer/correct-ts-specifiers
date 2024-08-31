@@ -1,6 +1,6 @@
 import { extname } from 'node:path';
 
-import type { FSPath, Specifier } from './index.d.ts';
+import type { FSAbsolutePath, Specifier } from './index.d.ts';
 import {
 	type DExt,
 	type JSExt,
@@ -13,12 +13,12 @@ import { logger } from './logger.js';
 
 
 export const replaceJSExtWithTSExt = async (
-	parentPath: FSPath,
+	parentPath: FSAbsolutePath,
 	specifier: Specifier,
 	rExt?: TSExt | DExt,
 ): Promise<{
 	isType?: boolean,
-	replacement: FSPath | null,
+	replacement: FSAbsolutePath | null,
 }> => {
 	if (!extname(specifier)) {
 		specifier += '.js';
