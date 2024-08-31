@@ -13,6 +13,7 @@ describe('workflow', () => {
 		const e2eFixtPath = fileURLToPath(import.meta.resolve('./fixtures/e2e/'));
 
 		await spawnPromisified('node', [
+      '--loader=nodejs-loaders/dev/alias',
       '--no-warnings',
       '--experimental-strip-types',
       '--experimental-import-meta-resolve',

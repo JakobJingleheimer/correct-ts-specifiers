@@ -4,7 +4,7 @@ import { bar } from '@dep/bar';
 import { foo } from 'foo';
 
 import { Cat } from './Cat.ts';
-import { Dog } from './Dog/index.mjs';
+import { Dog } from '…/Dog/index.mjs';
 import { baseUrl } from '#config.js';
 
 export { Zed } from './zed';
