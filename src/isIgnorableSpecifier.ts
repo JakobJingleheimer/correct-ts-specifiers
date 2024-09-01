@@ -26,7 +26,7 @@ export function isIgnorableSpecifier(
 	if (specifier.startsWith('file://') /* './' */) return false;
 
 	try {
-		const resolvedSpecifier = import.meta.resolve(specifier, pathToFileURL(parentPath));
+		const resolvedSpecifier = import.meta.resolve(specifier, pathToFileURL(parentPath).href);
 		if (dirname(resolvedSpecifier).includes('node_modules')) return true; // [1] is a node_module
 	} catch (err) { // @ts-ignore (TS requires type of err to be unknown)
 		if (!IGNORABLE_RESOLVE_ERRORS.has(err?.code)) throw err;
