@@ -39,7 +39,7 @@ npx codemod@latest correct-ts-specifiers
 * `.js` → `.d.cts`, `.d.mts`, or `.d.ts`
 * Package.json subimports
 * tsconfig paths (requires a loader)
-* Directory / commonjs-like specifiers
+* Commonjs-like directory specifiers
 
 Before:
 
