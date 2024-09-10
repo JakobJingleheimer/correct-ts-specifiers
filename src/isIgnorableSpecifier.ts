@@ -1,3 +1,4 @@
+import { isBuiltin } from 'node:module';
 import {
 	dirname,
 	extname,
@@ -13,7 +14,7 @@ export function isIgnorableSpecifier(
 	parentPath: FSAbsolutePath,
 	specifier: string,
 ) {
-	if (specifier.startsWith('node:')) return true;
+	if (isBuiltin(specifier)) return true;
 	if (specifier.startsWith('data:')) return true;
 
 	const ext = extname(specifier);
