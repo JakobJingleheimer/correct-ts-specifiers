@@ -20,3 +20,9 @@ export const dExts = [
 	'.d.mts',
 ] as const;
 export type DExt = typeof dExts[number];
+
+export const extSets = new Set([
+	jsExts,
+	tsExts,
+	dExts,
+]);

@@ -3,6 +3,7 @@ import { fexists } from './fexists.ts';
 import { logger } from './logger.js';
 import { isIgnorableSpecifier } from './isIgnorableSpecifier.ts';
 import { replaceJSExtWithTSExt } from './replace-js-ext-with-ts-ext.ts';
+import { isDir } from './isDir.ts';
 
 
 export const mapImports = async (
@@ -17,7 +18,10 @@ export const mapImports = async (
 	let { isType, replacement } = await replaceJSExtWithTSExt(parentPath, specifier);
 
 	if (replacement) {
-		if (await fexists(parentPath, specifier)) {
+		if (
+			await fexists(parentPath, specifier)
+			&& !(await isDir(parentPath, specifier))
+		) {
 			logger(
 				parentPath,
 				'warn', [
@@ -30,10 +34,6 @@ export const mapImports = async (
 
 		return { isType, replacement };
 	}
-
-	({ replacement } = await replaceJSExtWithTSExt(parentPath, specifier, '.d.ts'));
-
-	if (replacement) return { isType, replacement };
 
 	if (!await fexists(parentPath, specifier)) logger(
 		parentPath,

@@ -14,6 +14,7 @@ import {
 	dExts,
 	jsExts,
 	suspectExts,
+	tsExts,
 } from './exts.ts';
 
 
@@ -107,6 +108,69 @@ describe('Correcting ts file extensions', () => {
 
 				assert.equal(output.replacement, null);
 				assert.equal(output.isType, undefined);
+			}
+		});
+	});
+
+	describe('specifier is inherently a directory', () => {
+		it('should attempt to find an index file', async () => {
+			for (const base of ['.', './']) {
+				for (const jsExt of jsExts) {
+					const output = await replaceJSExtWithTSExt(
+						fileURLToPath(import.meta.resolve(`./fixtures/dir/${jsExt.slice(1)}/test.ts`)),
+						base,
+					);
+
+					assert.equal(output.replacement, `${base}${base.endsWith('/') ? '' : '/'}index${jsExt}`);
+					assert.equal(output.isType, false);
+				}
+
+				for (const tsExt of tsExts) {
+					const output = await replaceJSExtWithTSExt(
+						fileURLToPath(import.meta.resolve(`./fixtures/dir/${tsExt.slice(1)}/test.ts`)),
+						base,
+					);
+
+					assert.equal(output.replacement, `${base}${base.endsWith('/') ? '' : '/'}index${tsExt}`);
+					assert.equal(output.isType, false);
+				}
+			}
+		});
+	});
+
+	describe('specifier is NOT inherently a directory', () => {
+		it('should attempt to find an index file', async () => {
+			for (const dExt of dExts) {
+				const base = `./fixtures/d/unambiguous/${dExt.slice(3)}`;
+				const output = await replaceJSExtWithTSExt(
+					originatingFilePath,
+					base,
+				);
+
+				assert.equal(output.replacement, `${base}/index${dExt}`);
+				assert.equal(output.isType, true);
+			}
+
+			for (const jsExt of jsExts) {
+				const base = `./fixtures/dir/${jsExt.slice(1)}`;
+				const output = await replaceJSExtWithTSExt(
+					originatingFilePath,
+					base,
+				);
+
+				assert.equal(output.replacement, `${base}/index${jsExt}`);
+				assert.equal(output.isType, false);
+			}
+
+			for (const tsExt of tsExts) {
+				const base = `./fixtures/dir/${tsExt.slice(1)}`;
+				const output = await replaceJSExtWithTSExt(
+					originatingFilePath,
+					base,
+				);
+
+				assert.equal(output.replacement, `${base}/index${tsExt}`);
+				assert.equal(output.isType, false);
 			}
 		});
 	});
