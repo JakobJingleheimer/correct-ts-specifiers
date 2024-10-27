@@ -4,6 +4,11 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import type { FSAbsolutePath, Specifier } from './index.d.ts';
 
 
+/**
+ * Determine the fully resolved module indicated by the specifier.
+ * @param parentPath The module containing the provided specifier.
+ * @param specifier The specifier to potentially correct.
+ */
 export function resolveSpecifier(
 	parentPath: FSAbsolutePath,
 	specifier: Specifier,
@@ -20,7 +25,7 @@ export function resolveSpecifier(
 	try {
 		resolvedSpecifierUrl = import.meta.resolve(specifier, parentUrl);
 	} catch (err) {
-		console.error({ specifier, parentPath });
+		if (err && typeof err === 'object') Object.assign(err, { specifier, parentPath });
 		throw err;
 	}
 

@@ -1,7 +1,7 @@
 import { lstat } from 'fs/promises';
 
 import type { FSAbsolutePath, Specifier } from './index.d.ts';
-import { resolveSpecifier } from './resolveSpecifier.ts';
+import { resolveSpecifier } from './resolve-specifier.ts';
 
 
 export async function isDir(

@@ -1,11 +1,16 @@
 import type { FSAbsolutePath, Specifier } from './index.d.ts';
 import { fexists } from './fexists.ts';
 import { logger } from './logger.js';
-import { isIgnorableSpecifier } from './isIgnorableSpecifier.ts';
+import { isIgnorableSpecifier } from './is-ignorable-specifier.ts';
 import { replaceJSExtWithTSExt } from './replace-js-ext-with-ts-ext.ts';
-import { isDir } from './isDir.ts';
+import { isDir } from './is-dir.ts';
 
 
+/**
+ * Determine what, if anything, to replace the existing specifier.
+ * @param parentPath The module containing the provided specifier.
+ * @param specifier The specifier to potentially correct.
+ */
 export const mapImports = async (
 	parentPath: FSAbsolutePath,
 	specifier: Specifier,

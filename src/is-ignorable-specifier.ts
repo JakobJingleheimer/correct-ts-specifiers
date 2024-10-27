@@ -10,6 +10,11 @@ import { tsExts } from './exts.ts';
 import type { FSAbsolutePath } from './index.d.ts';
 
 
+/**
+ * Whether the specifier can be completely ignored.
+ * @param parentPath The module containing the provided specifier
+ * @param specifier The specifier to check.
+ */
 export function isIgnorableSpecifier(
 	parentPath: FSAbsolutePath,
 	specifier: string,
