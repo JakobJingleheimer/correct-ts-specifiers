@@ -1,7 +1,6 @@
 import assert from 'node:assert/strict';
 import {
 	type Mock,
-	after,
 	afterEach,
 	before,
 	describe,
@@ -13,7 +12,8 @@ import { fileURLToPath } from 'node:url';
 
 type FSAccess = typeof import('node:fs/promises').access;
 type FExists = typeof import('./fexists.ts').fexists;
-type MockModuleContext = ReturnType<typeof mock.module>;
+type ResolveSpecifier = typeof import('./resolve-specifier.ts').resolveSpecifier;
+// type MockModuleContext = ReturnType<typeof mock.module>;
 
 const RESOLVED_SPECIFIER_ERR = 'Resolved specifier did not match expected';
 
@@ -22,21 +22,26 @@ describe('fexists', () => {
 	const constants = { F_OK: null };
 
 	let mock__access: Mock<FSAccess>['mock'];
-	let mock__fs: MockModuleContext;
+	let mock__resolveSpecifier: Mock<ResolveSpecifier>['mock'];
 
 	before(() => {
 		const access = mock.fn<FSAccess>();
 		({ mock: mock__access } = access);
-		mock__fs = mock.module('node:fs/promises', {
+		mock.module('node:fs/promises', {
 			namedExports: {
 				access,
 				constants,
 			},
 		});
-	});
 
-	after(() => {
-		mock__fs.restore();
+		const resolveSpecifier = mock.fn<ResolveSpecifier>();
+		({ mock: mock__resolveSpecifier } = resolveSpecifier);
+		mock.module('./resolve-specifier.ts', {
+			namedExports: {
+				resolveSpecifier,
+			},
+		});
+		mock__resolveSpecifier.mockImplementation(function MOCK__resolveSpecifier(pp, specifier) { return specifier });
 	});
 
 	describe('when the file exists', () => {
@@ -52,35 +57,34 @@ describe('fexists', () => {
 			mock__access.resetCalls();
 		});
 
-		after(() => {
-			mock__fs.restore();
-		});
-
 		it('should return `true` for a bare specifier', async () => {
+			const specifier = 'foo';
 			const parentUrl = fileURLToPath(import.meta.resolve('./fixtures/e2e/test.js'));
 
-			assert.equal(await fexists(parentUrl, 'foo'), true);
+			assert.equal(await fexists(parentUrl, specifier), true);
 			assert.equal(
 				mock__access.calls[0].arguments[0],
-				fileURLToPath(import.meta.resolve('./fixtures/e2e/node_modules/foo/foo.js')),
+				specifier,
 				RESOLVED_SPECIFIER_ERR,
 			);
 		});
 
 		it('should return `true` for a relative specifier', async () => {
-			assert.equal(await fexists(parentPath, 'exists.js'), true);
+			const specifier = 'exists.js';
+			assert.equal(await fexists(parentPath, specifier), true);
 			assert.equal(
 				mock__access.calls[0].arguments[0],
-				'/tmp/exists.js',
+				specifier,
 				RESOLVED_SPECIFIER_ERR,
 			);
 		});
 
 		it('should return `true` for specifier with a query parameter', async () => {
-			assert.equal(await fexists(parentPath, 'exists.js?v=1'), true);
+			const specifier = 'exists.js?v=1';
+			assert.equal(await fexists(parentPath, specifier), true);
 			assert.equal(
 				mock__access.calls[0].arguments[0],
-				'/tmp/exists.js',
+				specifier,
 				RESOLVED_SPECIFIER_ERR,
 			);
 		});
@@ -119,42 +123,42 @@ describe('fexists', () => {
 			mock__access.resetCalls();
 		});
 
-		after(() => {
-			mock__fs.restore();
-		});
-
 		it('should return `false` for a relative specifier', async () => {
-			assert.equal(await fexists(parentPath, 'noexists.js'), false);
+			const specifier = 'noexists.js';
+			assert.equal(await fexists(parentPath, specifier), false);
 			assert.equal(
 				mock__access.calls[0].arguments[0],
-				'/tmp/noexists.js',
+				specifier,
 				RESOLVED_SPECIFIER_ERR,
 			);
 		});
 
 		it('should return `false` for a relative specifier', async () => {
-			assert.equal(await fexists(parentPath, 'noexists.js?v=1'), false);
+			const specifier = 'noexists.js?v=1';
+			assert.equal(await fexists(parentPath, specifier), false);
 			assert.equal(
 				mock__access.calls[0].arguments[0],
-				'/tmp/noexists.js',
+				specifier,
 				RESOLVED_SPECIFIER_ERR,
 			);
 		});
 
 		it('should return `false` for an absolute specifier', async () => {
-			assert.equal(await fexists(parentPath, '/tmp/foo/noexists.js'), false);
+			const specifier = '/tmp/foo/noexists.js';
+			assert.equal(await fexists(parentPath, specifier), false);
 			assert.equal(
 				mock__access.calls[0].arguments[0],
-				'/tmp/foo/noexists.js',
+				specifier,
 				RESOLVED_SPECIFIER_ERR,
 			);
 		});
 
 		it('should return `false` for a URL specifier', async () => {
-			assert.equal(await fexists(parentPath, 'file://localhost/foo/noexists.js'), false);
+			const specifier = 'file://localhost/foo/noexists.js';
+			assert.equal(await fexists(parentPath, specifier), false);
 			assert.equal(
 				mock__access.calls[0].arguments[0],
-				'file://localhost/foo/noexists.js',
+				specifier,
 				RESOLVED_SPECIFIER_ERR,
 			);
 		});
