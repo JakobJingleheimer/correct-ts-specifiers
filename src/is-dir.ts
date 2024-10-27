@@ -1,21 +1,19 @@
-import { access, constants } from 'node:fs/promises';
+import { lstat } from 'fs/promises';
 
 import type { FSAbsolutePath, Specifier } from './index.d.ts';
 import { resolveSpecifier } from './resolve-specifier.ts';
 
 
-export function fexists(
+export async function isDir(
 	parentPath: FSAbsolutePath,
 	specifier: Specifier,
 ) {
 	const resolvedSpecifier = resolveSpecifier(parentPath, specifier);
 
-	return access(
-		resolvedSpecifier,
-		constants.F_OK,
-	)
-	.then(
-		() => true,
-		() => false,
-	);
-};
+	try {
+		const stat = await lstat(resolvedSpecifier);
+		return stat.isDirectory();
+	} catch (err) {
+		return null;
+	}
+}

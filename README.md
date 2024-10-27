@@ -39,6 +39,7 @@ npx codemod@latest correct-ts-specifiers
 * `.js` → `.d.cts`, `.d.mts`, or `.d.ts`
 * Package.json subimports
 * tsconfig paths (requires a loader)
+* Commonjs-like directory specifiers
 
 Before:
 
@@ -48,9 +49,10 @@ import { URL } from 'node:url';
 import { bar } from '@dep/bar';
 import { foo } from 'foo';
 
+import { Bird } from './Bird';          // a directory
 import { Cat } from './Cat.ts';
-import { Dog } from '…/Dog/index.mjs'; // tsconfig paths
-import { baseUrl } from '#config.js';  // package.json imports
+import { Dog } from '…/Dog/index.mjs';  // tsconfig paths
+import { baseUrl } from '#config.js';   // package.json imports
 
 export { Zed } from './zed';
 
@@ -60,6 +62,7 @@ export const makeLink = (path: URL) => (new URL(path, baseUrl)).href;
 
 const nil = await import('./nil.js');
 
+const bird = new Bird('Tweety');
 const cat = new Cat('Milo');
 const dog = new Dog('Otis');
 ```
@@ -72,9 +75,10 @@ import { URL } from 'node:url';
 import { bar } from '@dep/bar';
 import { foo } from 'foo';
 
+import { Bird } from './Bird/index.ts';
 import { Cat } from './Cat.ts';
-import { Dog } from '…/Dog/index.mts'; // tsconfig paths
-import { baseUrl } from '#config.js';  // package.json imports
+import { Dog } from '…/Dog/index.mts';  // tsconfig paths
+import { baseUrl } from '#config.js';   // package.json imports
 
 export type { Zed } from './zed.d.ts';
 
@@ -84,16 +88,7 @@ export const makeLink = (path: URL) => (new URL(path, baseUrl)).href;
 
 const nil = await import('./nil.ts');
 
+const bird = new Bird('Tweety');
 const cat = new Cat('Milo');
 const dog = new Dog('Otis');
 ```
-
-## Unsupported cases
-
-* Directory / commonjs-like specifiers¹
-
-```ts
-import foo from '..'; // where '..' → '../index.ts' (or similar)
-```
-
-¹ Support may be added in a future release

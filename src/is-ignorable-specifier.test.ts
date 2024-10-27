@@ -6,7 +6,7 @@ import {
 import { fileURLToPath } from 'node:url';
 
 import { tsExts } from './exts.ts';
-import { isIgnorableSpecifier } from './isIgnorableSpecifier.ts';
+import { isIgnorableSpecifier } from './is-ignorable-specifier.ts';
 
 
 describe('Is ignorable specifier', () => {

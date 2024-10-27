@@ -1,10 +1,16 @@
 import type { FSAbsolutePath, Specifier } from './index.d.ts';
 import { fexists } from './fexists.ts';
 import { logger } from './logger.js';
-import { isIgnorableSpecifier } from './isIgnorableSpecifier.ts';
+import { isIgnorableSpecifier } from './is-ignorable-specifier.ts';
 import { replaceJSExtWithTSExt } from './replace-js-ext-with-ts-ext.ts';
+import { isDir } from './is-dir.ts';
 
 
+/**
+ * Determine what, if anything, to replace the existing specifier.
+ * @param parentPath The module containing the provided specifier.
+ * @param specifier The specifier to potentially correct.
+ */
 export const mapImports = async (
 	parentPath: FSAbsolutePath,
 	specifier: Specifier,
@@ -17,7 +23,10 @@ export const mapImports = async (
 	let { isType, replacement } = await replaceJSExtWithTSExt(parentPath, specifier);
 
 	if (replacement) {
-		if (await fexists(parentPath, specifier)) {
+		if (
+			await fexists(parentPath, specifier)
+			&& !(await isDir(parentPath, specifier))
+		) {
 			logger(
 				parentPath,
 				'warn', [
@@ -30,10 +39,6 @@ export const mapImports = async (
 
 		return { isType, replacement };
 	}
-
-	({ replacement } = await replaceJSExtWithTSExt(parentPath, specifier, '.d.ts'));
-
-	if (replacement) return { isType, replacement };
 
 	if (!await fexists(parentPath, specifier)) logger(
 		parentPath,

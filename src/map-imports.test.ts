@@ -95,7 +95,7 @@ describe('Map Imports', () => {
 			specifier,
 		);
 
-		assert.equal(output.replacement, undefined);
+		assert.equal(output.replacement, specifier);
 		assert.notEqual(output.isType, true);
 	});
 
