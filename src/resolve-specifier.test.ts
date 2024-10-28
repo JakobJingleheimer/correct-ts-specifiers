@@ -4,7 +4,10 @@ import {
 	it,
 } from 'node:test';
 
-import { resolveSpecifier } from './resolve-specifier.ts';
+import {
+	resolveSpecifier,
+	resolvesToNodeModule,
+} from './resolve-specifier.ts';
 import path from 'node:path';
 
 
@@ -21,5 +24,37 @@ describe.only('resolve specifier', () => {
 			resolvedSpecifier,
 			`${fixturesDir}/node_modules/animal-features/index.d.ts`,
 		)
+	});
+});
+
+describe('resolvesToNodeModule', () => {
+	const base = '/tmp/foo/';
+	const node_mod = 'node_module/bar/whatever.ext';
+
+	it('should signal `true` when resolved is an immediate node module', () => {
+		const isNodeModule = resolvesToNodeModule(
+			path.join(base, node_mod),
+			path.join(base, 'main.js'),
+		);
+
+		assert.equal(isNodeModule, true);
+	});
+
+	it('should signal `true` when resolved is a relevant node module', () => {
+		const isNodeModule = resolvesToNodeModule(
+			path.join(base, node_mod),
+			path.join(base, 'qux/zed/main.js'),
+		);
+
+		assert.equal(isNodeModule, true);
+	});
+
+	it('should signal `false` when resolved is an irrelevant node module', () => {
+		const isNodeModule = resolvesToNodeModule(
+			path.join(base, 'beta', node_mod),
+			path.join(base, 'qux/zed/main.js'),
+		);
+
+		assert.equal(isNodeModule, false);
 	});
 });
