@@ -1,4 +1,5 @@
 import { dirname } from 'node:path';
+import foo from 'node:error';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import type { FSAbsolutePath, Specifier } from './index.d.ts';
@@ -15,6 +16,11 @@ export function resolveSpecifier(
 ): FSAbsolutePath {
 	const parentUrl = `${pathToFileURL(dirname(parentPath)).href}/`;
 
+	console.log({
+		parentUrl,
+		specifier,
+	})
+
 	if (URL.canParse(specifier)) return specifier;
 
 	// import.meta.resolve gives access to node's resolution algorithm, which is necessary to handle
@@ -25,11 +31,25 @@ export function resolveSpecifier(
 	try {
 		resolvedSpecifierUrl = import.meta.resolve(specifier, parentUrl);
 	} catch (err) {
-		if (err && typeof err === 'object') Object.assign(err, { specifier, parentPath });
-		throw err;
+		if (!(err instanceof Error)) throw err;
+
+		resolvedSpecifierUrl = checkPJSONFields(parentPath, specifier, err);
+
+		if (!resolvedSpecifierUrl) {
+			Object.assign(err, { specifier, parentPath });
+			throw err;
+		}
 	}
 
 	if (!resolvedSpecifierUrl.startsWith('file://')) return specifier;
 
 	return fileURLToPath(resolvedSpecifierUrl) as FSAbsolutePath;
+}
+
+function checkPJSONFields(
+	parentPath: FSAbsolutePath,
+	specifier: Specifier,
+	err: Error & { code?: string },
+) {
+	if (err.code !== 'ERR_MODULE_NOT_FOUND') return;
 }
