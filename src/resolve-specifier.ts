@@ -68,7 +68,7 @@ export function resolvesToNodeModule(
 
 	// The first segment of rest of the resolved url needs to exactly match 'node_module' (it could be
 	// something like 'fake_node_modules') to be a real node module dependency.
-	return resolvedUrl.slice(i).split('/')[0] === 'node_module';
+	return resolvedUrl.slice(i).split('/')[0] === 'node_modules';
 }
 
 export function checkPjsonFields(

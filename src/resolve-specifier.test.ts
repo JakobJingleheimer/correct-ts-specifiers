@@ -29,7 +29,7 @@ describe.only('resolve specifier', () => {
 
 describe('resolvesToNodeModule', () => {
 	const base = '/tmp/foo/';
-	const node_mod = 'node_module/bar/whatever.ext';
+	const node_mod = 'node_modules/bar/whatever.ext';
 
 	it('should signal `true` when resolved is an immediate node module', () => {
 		const isNodeModule = resolvesToNodeModule(
