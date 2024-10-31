@@ -1,6 +1,10 @@
 import { access, constants } from 'node:fs/promises';
 
-import type { FSAbsolutePath, Specifier } from './index.d.ts';
+import type {
+	FSAbsolutePath,
+	ResolvedSpecifier,
+	Specifier,
+} from './index.d.ts';
 import { resolveSpecifier } from './resolve-specifier.ts';
 
 
@@ -10,12 +14,14 @@ export function fexists(
 ) {
 	const resolvedSpecifier = resolveSpecifier(parentPath, specifier);
 
-	return access(
-		resolvedSpecifier,
-		constants.F_OK,
-	)
-	.then(
-		() => true,
-		() => false,
-	);
+	return fexistsResolved(resolvedSpecifier);
 };
+
+export const fexistsResolved = (resolvedSpecifier: ResolvedSpecifier) => access(
+	resolvedSpecifier,
+	constants.F_OK,
+)
+.then(
+	() => true,
+	() => false,
+);
