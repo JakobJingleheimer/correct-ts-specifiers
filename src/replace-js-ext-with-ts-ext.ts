@@ -101,7 +101,7 @@ async function checkSet<Ext extends DExt | JSExt | TSExt>(
 	}
 
 	if (found.size) {
-		if (found.size === 1) return { isType: exts[0].startsWith('.d'), replacement };
+		if (found.size === 1) return { isType: exts[0].startsWith('.d'), replacement: replacement! };
 
 		logger(
 			parentPath,
