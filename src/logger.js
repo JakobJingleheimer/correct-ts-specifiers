@@ -8,6 +8,8 @@ import process from 'node:process';
  * @typedef {'error' | 'log' | 'warn'} LogType
  */
 /**
+ * Collect log entries and report them at the end, collated by source module.
+ *
  * @param {URL['pathname']} source
  * @param {LogType} type
  * @param {LogMsg} msg
@@ -42,7 +44,7 @@ function emitLogs() {
 	}
 
 	if (hasError) {
-		console.log('[Codemod: correct-ts-extensions]: migration incomplete!');
+		console.error('[Codemod: correct-ts-extensions]: migration incomplete!');
 		process.exitCode = 1;
 	}
 	else {
