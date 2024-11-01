@@ -26,7 +26,7 @@ describe('Map Imports', () => {
 	before(async () => {
 		const logger = mock.fn<Logger>();
 		({ mock: mock__log } = logger);
-		mock__logger = mock.module('./logger.js', {
+		mock__logger = mock.module('./logger.ts', {
 			namedExports: { logger }
 		});
 

@@ -9,7 +9,7 @@ import {
 	suspectExts,
 } from './exts.ts';
 import { fexists } from './fexists.ts';
-import { logger } from './logger.js';
+import { logger } from './logger.ts';
 import { isDir } from './is-dir.ts';
 
 

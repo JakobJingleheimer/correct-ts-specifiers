@@ -10,9 +10,11 @@ import { spawnPromisified } from '../build/spawn-promisified.ts';
 describe('logger', () => {
 	it('should emit non-error entries to standard out, collated by source module', async (t) => {
 		const { stdout } = await spawnPromisified(execPath, [
+			'--no-warnings',
+			'--experimental-strip-types',
 			'-e',
 			`
-				import { logger } from './logger.js';
+				import { logger } from './logger.ts';
 
 				const source1 = '/tmp/foo.js';
 				logger(source1, 'log', 'maybe don’t');
@@ -31,9 +33,11 @@ describe('logger', () => {
 
 	it('should emit error entries to standard error, collated by source module', async (t) => {
 		const { stderr } = await spawnPromisified(execPath, [
+			'--no-warnings',
+			'--experimental-strip-types',
 			'-e',
 			`
-				import { logger } from './logger.js';
+				import { logger } from './logger.ts';
 
 				const source1 = '/tmp/foo.js';
 				logger(source1, 'error', 'sh*t happened');
