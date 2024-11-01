@@ -1,3 +1,4 @@
+import assert from 'node:assert/strict';
 import { execPath } from 'node:process';
 import {
 	describe,
@@ -9,7 +10,7 @@ import { spawnPromisified } from '../build/spawn-promisified.ts';
 
 describe('logger', () => {
 	it('should emit non-error entries to standard out, collated by source module', async (t) => {
-		const { stdout } = await spawnPromisified(execPath, [
+		const { code, stdout } = await spawnPromisified(execPath, [
 			'--no-warnings',
 			'--experimental-strip-types',
 			'-e',
@@ -29,10 +30,11 @@ describe('logger', () => {
 		});
 
 		t.assert.snapshot(stdout);
+		assert.equal(code, 0);
 	});
 
 	it('should emit error entries to standard error, collated by source module', async (t) => {
-		const { stderr } = await spawnPromisified(execPath, [
+		const { code, stderr } = await spawnPromisified(execPath, [
 			'--no-warnings',
 			'--experimental-strip-types',
 			'-e',
@@ -52,5 +54,6 @@ describe('logger', () => {
 		});
 
 		t.assert.snapshot(stderr);
+		assert.equal(code, 1);
 	});
 });
