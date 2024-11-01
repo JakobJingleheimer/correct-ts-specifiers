@@ -20,6 +20,7 @@ export function resolveSpecifier(
 	parentPath: FSAbsolutePath | ResolvedSpecifier,
 	specifier: Specifier,
 ): FSAbsolutePath {
+console.log('resolveSpecifier', { specifier })
 	if (URL.canParse(specifier)) return specifier;
 
 	// import.meta.resolve gives access to node's resolution algorithm, which is necessary to handle
@@ -33,8 +34,11 @@ export function resolveSpecifier(
 	try {
 		const interimResolvedUrl = import.meta.resolve(specifier, parentUrl);
 		if (resolvesToNodeModule(interimResolvedUrl, parentUrl)) {
+console.log(specifier, 'is a node module')
 			if (extname(specifier)) { // Only check if there's potentially a subpath
+console.log('is suspect export')
 				const { exports } = findPackageJSON(interimResolvedUrl, parentPath);
+console.log(`${specifier}'s exports`, exports)
 				if (!exports) { // Validate the extension, ex index.js → index.d.ts
 					replaceJSExtWithTSExt(parentPath, interimResolvedUrl);
 				}
@@ -42,8 +46,11 @@ export function resolveSpecifier(
 
 			return specifier;
 		}
+		console.log(interimResolvedUrl, 'is NOT a node module')
+
 		return resolvedSpecifierUrl = interimResolvedUrl;
 	} catch (err) {
+console.log('resolveSpecifier:: error caught')
 		if (!(err instanceof Error)) throw err;
 
 		resolvedSpecifierUrl = checkPjsonFields(parentPath, specifier, err);
