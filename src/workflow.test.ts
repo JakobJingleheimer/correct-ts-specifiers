@@ -1,18 +1,19 @@
 import { spawn } from 'node:child_process';
 import { resolve } from 'node:path';
 import { readFile } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
+import { execPath } from 'node:process';
 import {
 	describe,
 	it,
 } from 'node:test';
+import { fileURLToPath } from 'node:url';
 
 
 describe('workflow', () => {
 	it('should update bad specifiers and ignore good ones', async (t) => {
 		const e2eFixtPath = fileURLToPath(import.meta.resolve('./fixtures/e2e/'));
 
-		await spawnPromisified('node', [
+		await spawnPromisified(execPath, [
 			'--loader=nodejs-loaders/dev/alias',
 			'--no-warnings',
 			'--experimental-strip-types',
