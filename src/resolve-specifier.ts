@@ -48,7 +48,7 @@ console.log(`${specifier}'s exports`, exports)
 		}
 		console.log(interimResolvedUrl, 'is NOT a node module')
 
-		return resolvedSpecifierUrl = interimResolvedUrl;
+		resolvedSpecifierUrl = interimResolvedUrl; // ! let continue to `fileURLToPath` below
 	} catch (err) {
 console.log('resolveSpecifier:: error caught')
 		if (!(err instanceof Error)) throw err;

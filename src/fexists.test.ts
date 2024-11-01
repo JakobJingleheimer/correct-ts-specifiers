@@ -13,7 +13,6 @@ import { fileURLToPath } from 'node:url';
 type FSAccess = typeof import('node:fs/promises').access;
 type FExists = typeof import('./fexists.ts').fexists;
 type ResolveSpecifier = typeof import('./resolve-specifier.ts').resolveSpecifier;
-// type MockModuleContext = ReturnType<typeof mock.module>;
 
 const RESOLVED_SPECIFIER_ERR = 'Resolved specifier did not match expected';
 

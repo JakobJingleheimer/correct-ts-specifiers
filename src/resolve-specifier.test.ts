@@ -11,7 +11,7 @@ import {
 import path from 'node:path';
 
 
-describe.only('resolve specifier', () => {
+describe('resolve specifier', () => {
 	const fixturesDir = path.join(import.meta.dirname, 'fixtures/e2e');
 
 	describe('node modules', () => {
