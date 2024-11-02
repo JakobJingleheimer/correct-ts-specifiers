@@ -13,27 +13,40 @@ import path from 'node:path';
 
 describe('resolve specifier', () => {
 	const fixturesDir = path.join(import.meta.dirname, 'fixtures/e2e');
+	const catSpecifier = `${fixturesDir}/Cat.ts`;
 
 	it('should strip an already resolved specifier (file url → path)', () => {
-		const ogSpecifier = `${fixturesDir}/Cat.ts`;
 		const resolvedSpecifier = resolveSpecifier(
 			`${fixturesDir}/test.ts`,
-			`file://${ogSpecifier}`,
+			`file://${catSpecifier}`,
 		);
 
-		assert.equal(resolvedSpecifier, ogSpecifier);
+		assert.equal(resolvedSpecifier, catSpecifier);
 	});
 
 	describe('node modules', () => {
-		it('should ignore a non-suspect bare specifier', () => {
+		it('should ignore a bare specifier', () => {
 			const resolvedSpecifier = resolveSpecifier(
-				`${fixturesDir}/Cat.ts`,
+				catSpecifier,
 				'animal-features',
 			);
 
 			assert.equal(
 				resolvedSpecifier,
 				'animal-features',
+			);
+		});
+
+		it('should ignore a non-suspect bare specifier subimport', () => {
+			const ogSpecifier = 'foo/bar';
+			const resolvedSpecifier = resolveSpecifier(
+				catSpecifier,
+				ogSpecifier,
+			);
+
+			assert.equal(
+				resolvedSpecifier,
+				ogSpecifier,
 			);
 		});
 	});
@@ -45,7 +58,7 @@ describe('resolve specifier', () => {
 				`./Cat.ts`,
 			);
 
-			assert.equal(resolvedSpecifier, `${fixturesDir}/Cat.ts`);
+			assert.equal(resolvedSpecifier, catSpecifier);
 		});
 	});
 });
