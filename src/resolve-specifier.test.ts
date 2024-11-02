@@ -14,6 +14,12 @@ import path from 'node:path';
 describe('resolve specifier', () => {
 	const fixturesDir = path.join(import.meta.dirname, 'fixtures/e2e');
 
+			`file://${ogSpecifier}`,
+		);
+
+		assert.equal(resolvedSpecifier, ogSpecifier);
+	});
+
 	describe('node modules', () => {
 		it('should ignore a non-suspect bare specifier', () => {
 			const resolvedSpecifier = resolveSpecifier(

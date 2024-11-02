@@ -12,7 +12,7 @@ import { replaceJSExtWithTSExt } from './replace-js-ext-with-ts-ext.ts';
 
 
 /**
- * Determine the fully resolved module indicated by the specifier.
+ * Determine the fully resolved module location indicated by the specifier.
  * @param parentPath The module containing the provided specifier.
  * @param specifier The specifier to potentially correct.
  */
@@ -21,7 +21,7 @@ export function resolveSpecifier(
 	specifier: Specifier,
 ): FSAbsolutePath {
 console.log('resolveSpecifier', { specifier })
-	if (URL.canParse(specifier)) return specifier;
+	if (URL.canParse(specifier)) return fileURLToPath(specifier);
 
 	// import.meta.resolve gives access to node's resolution algorithm, which is necessary to handle
 	// a myriad of non-obvious routes, like pJson subimports and the result of any hooks that may be
