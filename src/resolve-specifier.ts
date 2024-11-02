@@ -9,6 +9,7 @@ import type {
 	Specifier,
 } from './index.d.ts';
 import { replaceJSExtWithTSExt } from './replace-js-ext-with-ts-ext.ts';
+import { logger } from './logger.ts';
 
 
 /**
@@ -20,7 +21,6 @@ export function resolveSpecifier(
 	parentPath: FSAbsolutePath | ResolvedSpecifier,
 	specifier: Specifier,
 ): FSAbsolutePath {
-console.log('resolveSpecifier', { specifier })
 	if (URL.canParse(specifier)) return fileURLToPath(specifier);
 
 	// import.meta.resolve() gives access to node's resolution algorithm, which is necessary to handle
@@ -34,23 +34,26 @@ console.log('resolveSpecifier', { specifier })
 	try {
 		const interimResolvedUrl = import.meta.resolve(specifier, parentUrl);
 		if (resolvesToNodeModule(interimResolvedUrl, parentUrl)) {
-console.log(specifier, 'is a node module')
 			if (extname(specifier)) { // Only check if there's potentially a subpath
-console.log('is suspect export')
 				const { exports } = findPackageJSON(interimResolvedUrl, parentPath);
-console.log(`${specifier}'s exports`, exports)
 				if (!exports) { // Validate the extension, ex index.js → index.d.ts
-					replaceJSExtWithTSExt(parentPath, interimResolvedUrl);
+					logger(
+						parentPath,
+						'warn',
+						`subpaths within a node modules package is not yet supported. '${specifier}' was not verified.`,
+					);
+					// TODO: This creates a circular dep, and also forces resolveSpecifier to return a promise
+					// replaceJSExtWithTSExt(parentPath, interimResolvedUrl);
 				}
 			}
 
 			return specifier;
 		}
-		console.log(interimResolvedUrl, 'is NOT a node module')
+// console.log(interimResolvedUrl, 'is NOT a node module')
 
 		resolvedSpecifierUrl = interimResolvedUrl; // ! let continue to `fileURLToPath` below
 	} catch (err) {
-console.log('resolveSpecifier:: error caught')
+// console.log('resolveSpecifier:: error caught')
 		if (!(err instanceof Error)) throw err;
 
 		resolvedSpecifierUrl = checkPjsonFields(parentPath, specifier, err);
@@ -87,11 +90,11 @@ export function checkPjsonFields(
 
 	const unresolved = err.message.split('\'')[1];
 
-	console.log({ unresolved });
+	// console.log({ unresolved });
 
 	const closestPjson = findPackageJSON(unresolved, parentPath);
 
-	console.log({ closestPjson })
+	// console.log({ closestPjson })
 	const pjson = readPJSON(closestPjson);
 }
 
