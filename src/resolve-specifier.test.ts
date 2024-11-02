@@ -14,6 +14,10 @@ import path from 'node:path';
 describe('resolve specifier', () => {
 	const fixturesDir = path.join(import.meta.dirname, 'fixtures/e2e');
 
+	it('should strip an already resolved specifier (file url → path)', () => {
+		const ogSpecifier = `${fixturesDir}/Cat.ts`;
+		const resolvedSpecifier = resolveSpecifier(
+			`${fixturesDir}/test.ts`,
 			`file://${ogSpecifier}`,
 		);
 
@@ -30,7 +34,18 @@ describe('resolve specifier', () => {
 			assert.equal(
 				resolvedSpecifier,
 				'animal-features',
-			)
+			);
+		});
+	});
+
+	describe('own modules', () => {
+		it('should resolve and return a file path', () => {
+			const resolvedSpecifier = resolveSpecifier(
+				`${fixturesDir}/test.ts`,
+				`./Cat.ts`,
+			);
+
+			assert.equal(resolvedSpecifier, `${fixturesDir}/Cat.ts`);
 		});
 	});
 });

@@ -23,8 +23,8 @@ export function resolveSpecifier(
 console.log('resolveSpecifier', { specifier })
 	if (URL.canParse(specifier)) return fileURLToPath(specifier);
 
-	// import.meta.resolve gives access to node's resolution algorithm, which is necessary to handle
-	// a myriad of non-obvious routes, like pJson subimports and the result of any hooks that may be
+	// import.meta.resolve() gives access to node's resolution algorithm, which is necessary to handle
+	// a myriad of non-obvious routes, like pjson subimports and the result of any hooks that may be
 	// helping, such as ones facilitating tsconfig's "paths"
 	let resolvedSpecifierUrl: URL['href'];
 	const parentUrl = isAbsolute(parentPath)
