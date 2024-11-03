@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import path from 'node:path';
 import {
 	type Mock,
 	before,
@@ -25,6 +26,9 @@ type ReplaceJSExtWithTSExt = typeof import('./replace-js-ext-with-ts-ext.ts').re
 
 describe('Correcting ts file extensions', () => {
 	const originatingFilePath = fileURLToPath(import.meta.resolve('./test.ts'));
+	const fixturesDir = path.join(import.meta.dirname, 'fixtures/e2e');
+	const catSpecifier = path.join(fixturesDir, 'Cat.ts');
+
 	let mock__log: Mock<Logger>['mock'];
 	let mock__logger: MockModuleContext;
 	let replaceJSExtWithTSExt: ReplaceJSExtWithTSExt;
@@ -39,11 +43,11 @@ describe('Correcting ts file extensions', () => {
 		({ replaceJSExtWithTSExt } = await import('./replace-js-ext-with-ts-ext.ts'));
 	});
 
-	afterEach(() => {
+	afterEach(() => { // TODO delete me
 		mock__log.resetCalls();
 	});
 
-	after(() => {
+	after(() => { // TODO delete me
 		mock__logger.restore();
 	});
 
@@ -93,6 +97,20 @@ describe('Correcting ts file extensions', () => {
 						assert.equal(output.replacement, `${base}${dExt}`);
 						assert.equal(output.isType, true);
 					}
+				});
+
+				it.only('should update a subpath of a node module', async () => {
+					const specifierBase = 'types/a';
+					const {
+						isType,
+						replacement,
+					} = await replaceJSExtWithTSExt(
+						catSpecifier,
+						`${specifierBase}.js`,
+					);
+
+					assert.equal(isType, true);
+					assert.equal(replacement, `${specifierBase}.d.ts`);
 				});
 			});
 		});

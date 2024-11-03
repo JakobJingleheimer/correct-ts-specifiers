@@ -11,7 +11,7 @@ import {
 import path from 'node:path';
 
 
-describe('resolve specifier', () => {
+describe('Resolve specifier', () => {
 	const fixturesDir = path.join(import.meta.dirname, 'fixtures/e2e');
 	const catSpecifier = `${fixturesDir}/Cat.ts`;
 
@@ -63,7 +63,7 @@ describe('resolve specifier', () => {
 	});
 });
 
-describe('resolvesToNodeModule', () => {
+describe('Resolves to a node module', () => {
 	const base = '/tmp/foo/';
 	const node_mod = 'node_modules/bar/whatever.ext';
 

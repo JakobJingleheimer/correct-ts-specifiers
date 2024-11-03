@@ -1,15 +1,15 @@
-import { findPackageJSON } from 'node:module';
-import { readFileSync } from 'node:fs';
+
 import { extname, isAbsolute } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import type {
 	FSAbsolutePath,
+	NodeError,
 	ResolvedSpecifier,
 	Specifier,
 } from './index.d.ts';
-import { replaceJSExtWithTSExt } from './replace-js-ext-with-ts-ext.ts';
-import { logger } from './logger.ts';
+// import { logger } from './logger.ts';
+import { getPackageJSON } from './get-package-json.ts';
 
 
 /**
@@ -33,35 +33,29 @@ export function resolveSpecifier(
 
 	try {
 		const interimResolvedUrl = import.meta.resolve(specifier, parentUrl);
+
 		if (resolvesToNodeModule(interimResolvedUrl, parentUrl)) {
-			if (extname(specifier)) { // Only check if there's potentially a subpath
-				const { exports } = findPackageJSON(interimResolvedUrl, parentPath);
-				if (!exports) { // Validate the extension, ex index.js → index.d.ts
-					logger(
-						parentPath,
-						'warn',
-						`subpaths within a node modules package is not yet supported. '${specifier}' was not verified.`,
-					);
-					// TODO: This creates a circular dep, and also forces resolveSpecifier to return a promise
-					// replaceJSExtWithTSExt(parentPath, interimResolvedUrl);
-				}
+			// TODO add a case for an extensionless subpath import
+			if (getPackageJSON(interimResolvedUrl, parentUrl).exports) {
+// console.log('resolveSpecifier::', {interimResolvedUrl, parentUrl});
+
+				return specifier;
 			}
-
-			return specifier;
 		}
-// console.log(interimResolvedUrl, 'is NOT a node module')
+		// else console.log(interimResolvedUrl, 'is NOT a node module');
 
+// console.log('resolveSpecifier:: using interimResolvedUrl', interimResolvedUrl);
 		resolvedSpecifierUrl = interimResolvedUrl; // ! let continue to `fileURLToPath` below
 	} catch (err) {
-// console.log('resolveSpecifier:: error caught')
-		if (!(err instanceof Error)) throw err;
+console.log('resolveSpecifier:: error caught')
+		// if (!(err instanceof Error)) throw err;
 
-		resolvedSpecifierUrl = checkPjsonFields(parentPath, specifier, err);
+		// resolvedSpecifierUrl = checkPjsonFields(parentPath, specifier, err);
 
-		if (!resolvedSpecifierUrl) {
-			Object.assign(err, { specifier, parentPath });
-			throw err;
-		}
+		// if (!resolvedSpecifierUrl) {
+		// 	Object.assign(err, { specifier, parentPath });
+		// 	throw err;
+		// }
 	}
 
 	if (!resolvedSpecifierUrl.startsWith('file://')) return specifier;
@@ -84,7 +78,7 @@ export function resolvesToNodeModule(
 export function checkPjsonFields(
 	parentPath: FSAbsolutePath,
 	specifier: ResolvedSpecifier,
-	err: Error & { code?: string },
+	err: NodeError,
 ) {
 	if (err.code !== 'ERR_MODULE_NOT_FOUND') return;
 
@@ -92,10 +86,9 @@ export function checkPjsonFields(
 
 	// console.log({ unresolved });
 
-	const closestPjson = findPackageJSON(unresolved, parentPath);
+	const pjson = getPackageJSON(unresolved, parentPath);
 
-	// console.log({ closestPjson })
-	const pjson = readPJSON(closestPjson);
+	// console.log({ pjson })
 }
 
-const readPJSON = (locus: ResolvedSpecifier) => JSON.parse(readFileSync(locus, 'utf8'));
+

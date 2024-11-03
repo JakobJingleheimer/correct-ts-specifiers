@@ -16,3 +16,5 @@ export type ResolvedSpecifier = URL['href'];
  * @example './bar.js'
  */
 export type Specifier = URL['pathname'] | ResolvedSpecifier;
+
+export type NodeError = Error & { code?: string };
