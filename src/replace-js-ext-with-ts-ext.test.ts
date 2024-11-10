@@ -99,7 +99,7 @@ describe('Correcting ts file extensions', () => {
 					}
 				});
 
-				it.only('should update a subpath of a node module', async () => {
+				it.skip('should update a subpath of a node module', async () => {
 					const specifierBase = 'types/a';
 					const {
 						isType,

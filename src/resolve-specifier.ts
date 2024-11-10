@@ -1,5 +1,5 @@
 
-import { extname, isAbsolute } from 'node:path';
+import { isAbsolute } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import type {
@@ -8,7 +8,7 @@ import type {
 	ResolvedSpecifier,
 	Specifier,
 } from './index.d.ts';
-// import { logger } from './logger.ts';
+import { getNotFoundUrl } from './get-not-found-url.ts';
 import { getPackageJSON } from './get-package-json.ts';
 
 
@@ -26,7 +26,7 @@ export function resolveSpecifier(
 	// import.meta.resolve() gives access to node's resolution algorithm, which is necessary to handle
 	// a myriad of non-obvious routes, like pjson subimports and the result of any hooks that may be
 	// helping, such as ones facilitating tsconfig's "paths"
-	let resolvedSpecifierUrl: URL['href'];
+	let resolvedSpecifierUrl: URL['href'] | undefined;
 	const parentUrl = isAbsolute(parentPath)
 		? pathToFileURL(parentPath).href
 		: parentPath;
@@ -36,29 +36,28 @@ export function resolveSpecifier(
 
 		if (resolvesToNodeModule(interimResolvedUrl, parentUrl)) {
 			// TODO add a case for an extensionless subpath import
-			if (getPackageJSON(interimResolvedUrl, parentUrl).exports) {
-// console.log('resolveSpecifier::', {interimResolvedUrl, parentUrl});
-
+			if (getPackageJSON(interimResolvedUrl, parentUrl)?.exports) {
 				return specifier;
 			}
 		}
-		// else console.log(interimResolvedUrl, 'is NOT a node module');
-
-// console.log('resolveSpecifier:: using interimResolvedUrl', interimResolvedUrl);
 		resolvedSpecifierUrl = interimResolvedUrl; // ! let continue to `fileURLToPath` below
 	} catch (err) {
-console.log('resolveSpecifier:: error caught')
-		// if (!(err instanceof Error)) throw err;
+		if (!(err instanceof Error)) throw err;
 
-		// resolvedSpecifierUrl = checkPjsonFields(parentPath, specifier, err);
+		if (
+			(err as NodeError).code === 'ERR_MODULE_NOT_FOUND'
+			&& resolvesToNodeModule(getNotFoundUrl(err), parentUrl)
+		) {
+			return specifier;
+		}
 
-		// if (!resolvedSpecifierUrl) {
-		// 	Object.assign(err, { specifier, parentPath });
-		// 	throw err;
-		// }
+		if (!resolvedSpecifierUrl) {
+			Object.assign(err, { specifier, parentPath });
+			throw err;
+		}
 	}
 
-	if (!resolvedSpecifierUrl.startsWith('file://')) return specifier;
+	if (!resolvedSpecifierUrl?.startsWith('file://')) return specifier;
 
 	return fileURLToPath(resolvedSpecifierUrl) as FSAbsolutePath;
 }
@@ -74,21 +73,3 @@ export function resolvesToNodeModule(
 	// something like 'fake_node_modules') to be a real node module dependency.
 	return resolvedUrl.slice(i).split('/')[0] === 'node_modules';
 }
-
-export function checkPjsonFields(
-	parentPath: FSAbsolutePath,
-	specifier: ResolvedSpecifier,
-	err: NodeError,
-) {
-	if (err.code !== 'ERR_MODULE_NOT_FOUND') return;
-
-	const unresolved = err.message.split('\'')[1];
-
-	// console.log({ unresolved });
-
-	const pjson = getPackageJSON(unresolved, parentPath);
-
-	// console.log({ pjson })
-}
-
-

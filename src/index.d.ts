@@ -17,4 +17,7 @@ export type ResolvedSpecifier = URL['href'];
  */
 export type Specifier = URL['pathname'] | ResolvedSpecifier;
 
-export type NodeError = Error & { code?: string };
+export type NodeError = Error & Partial<{
+	code: string,
+	url: `/${string}`,
+}>;

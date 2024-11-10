@@ -94,3 +94,5 @@ describe('Resolves to a node module', () => {
 		assert.equal(isNodeModule, false);
 	});
 });
+
+describe('Get type def specifier from package.json');

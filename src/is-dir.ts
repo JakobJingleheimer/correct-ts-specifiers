@@ -1,4 +1,4 @@
-import { lstat } from 'fs/promises';
+import { lstat } from 'node:fs/promises';
 
 import type { FSAbsolutePath, NodeError, ResolvedSpecifier, Specifier } from './index.d.ts';
 import { resolveSpecifier } from './resolve-specifier.ts';
