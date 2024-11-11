@@ -6,8 +6,8 @@ type FSPathSegment = string;
 /**
  * @example '/foo/bar.js'
  */
-// export type FSAbsolutePath = string & `${typeof sep}${FSPathSegment}`;
-export type FSAbsolutePath = string;
+export type FSAbsolutePath = string & `/${FSPathSegment}`;
+// export type FSAbsolutePath = string;
 /**
  * @example 'file:///foo/bar.js'
  */
@@ -19,5 +19,5 @@ export type Specifier = URL['pathname'] | ResolvedSpecifier;
 
 export type NodeError = Error & Partial<{
 	code: string,
-	url: `/${string}`,
+	url: FSAbsolutePath,
 }>;

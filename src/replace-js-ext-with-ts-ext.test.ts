@@ -51,6 +51,8 @@ describe('Correcting ts file extensions', () => {
 		mock__logger.restore();
 	});
 
+	describe.todo('Get type def specifier from package.json');
+
 	describe('mapped extension exists', () => {
 		describe('unambiguous match', () => {
 			it('should return an updated specifier', async () => {

@@ -10,6 +10,7 @@ import type {
 } from './index.d.ts';
 import { getNotFoundUrl } from './get-not-found-url.ts';
 import { getPackageJSON } from './get-package-json.ts';
+import { resolvesToNodeModule } from './resolves-to-node-module.ts';
 
 
 /**
@@ -60,16 +61,4 @@ export function resolveSpecifier(
 	if (!resolvedSpecifierUrl?.startsWith('file://')) return specifier;
 
 	return fileURLToPath(resolvedSpecifierUrl) as FSAbsolutePath;
-}
-
-export function resolvesToNodeModule(
-	resolvedUrl: ResolvedSpecifier,
-	parentUrl: ResolvedSpecifier,
-) {
-	let i = 0; // Track the last common character to determine where to check for a node module.
-	for (let n = resolvedUrl.length; i < n; i++) if (resolvedUrl[i] !== parentUrl[i]) break;
-
-	// The first segment of rest of the resolved url needs to exactly match 'node_module' (it could be
-	// something like 'fake_node_modules') to be a real node module dependency.
-	return resolvedUrl.slice(i).split('/')[0] === 'node_modules';
 }

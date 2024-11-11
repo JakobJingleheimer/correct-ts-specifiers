@@ -1,3 +1,6 @@
+import _get from 'lodash.get';
+import { PackageJson } from 'type-fest';
+
 import type {
 	NodeError,
 	Specifier,
@@ -6,23 +9,33 @@ import { getNotFoundUrl } from './get-not-found-url.ts';
 import { getPackageJSON } from './get-package-json.ts';
 
 
-export function checkPjsonFields(
+export function getTypeDefsFromPjson(
 	specifier: Specifier,
 	err: NodeError,
 ) {
-	if (err.code !== 'ERR_MODULE_NOT_FOUND') return;
-
 	const unresolved = getNotFoundUrl(err);
 
 	const pjson = getPackageJSON(specifier, unresolved);
 
-	const typesPath = (
-		   pjson?.types
-		|| pjson?.exports?.types
-		|| pjson?.exports?.typings
-	);
+	if (!pjson) return;
+
+	const subpath = specifier.slice(specifier.indexOf('/')) || '.';
+
+	for (const sub of [
+		'types',
+		'exports.types',
+		`exports['${subpath}'].types`,
+		'exports.typings',
+		`exports['${subpath}'].typings`,
+	]) {
+		tryPjsonTypeDef(pjson, sub);
+	}
 
 	if (!typesPath) return;
 
 	return import.meta.resolve(typesPath, unresolved);
+}
+
+function tryPjsonTypeDef(pjson: PackageJson, objPath: string) {
+
 }

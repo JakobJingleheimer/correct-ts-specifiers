@@ -1,6 +1,5 @@
 import { isBuiltin } from 'node:module';
 import {
-	dirname,
 	extname,
 	sep,
 } from 'node:path';
@@ -8,6 +7,7 @@ import { pathToFileURL } from 'node:url';
 
 import { tsExts } from './exts.ts';
 import type { FSAbsolutePath } from './index.d.ts';
+import { resolvesToNodeModule } from './resolves-to-node-module.ts';
 
 
 /**
@@ -32,8 +32,8 @@ export function isIgnorableSpecifier(
 	if (specifier.startsWith('file://') /* './' */) return false;
 
 	try {
-		const resolvedSpecifier = import.meta.resolve(specifier, pathToFileURL(parentPath).href);
-		if (dirname(resolvedSpecifier).includes('node_modules')) return true; // [1] is a node_module
+		const resolvedSpecifier = import.meta.resolve(specifier, pathToFileURL(parentPath).href); // [1]
+		if (resolvesToNodeModule(resolvedSpecifier, parentPath)) return false; // May be a type import
 	} catch (err) { // @ts-ignore (TS requires type of err to be unknown)
 		if (!IGNORABLE_RESOLVE_ERRORS.has(err?.code)) throw err;
 	}

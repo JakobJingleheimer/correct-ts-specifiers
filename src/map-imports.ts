@@ -1,9 +1,11 @@
 import type { FSAbsolutePath, Specifier } from './index.d.ts';
+import { getTypeDefsFromPjson } from './check-pjson-types.ts';
 import { fexists } from './fexists.ts';
 import { logger } from './logger.ts';
+import { isDir } from './is-dir.ts';
 import { isIgnorableSpecifier } from './is-ignorable-specifier.ts';
 import { replaceJSExtWithTSExt } from './replace-js-ext-with-ts-ext.ts';
-import { isDir } from './is-dir.ts';
+import { resolvesToNodeModule } from './resolves-to-node-module.ts';
 
 
 /**
@@ -19,6 +21,11 @@ export const mapImports = async (
 	replacement?: string;
 }> => {
 	if (isIgnorableSpecifier(parentPath, specifier)) return {};
+
+	if (resolvesToNodeModule(specifier, parentPath)) {
+		const typeDefUrl = getTypeDefsFromPjson(specifier, { url: parentPath });
+		return { }
+	}
 
 	let { isType, replacement } = await replaceJSExtWithTSExt(parentPath, specifier);
 
