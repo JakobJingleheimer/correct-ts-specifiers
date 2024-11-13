@@ -5,7 +5,7 @@
   "type": "module",
   "main": "./src/workflow.ts",
   "engines": {
-    "node": "22"
+    "node": "^23.2 || ^22.12 || ^20.19"
   },
   "scripts": {
     "start": "node --no-warnings --experimental-import-meta-resolve --experimental-strip-types ./src/workflow.ts",
