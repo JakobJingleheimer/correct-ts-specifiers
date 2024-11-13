@@ -2,12 +2,12 @@ import assert from 'node:assert/strict';
 import path from 'node:path';
 import {
 	type Mock,
+	after,
+	afterEach,
 	before,
 	describe,
 	it,
 	mock,
-	afterEach,
-	after,
 } from 'node:test';
 import { fileURLToPath} from 'node:url';
 

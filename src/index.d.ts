@@ -17,7 +17,7 @@ export type ResolvedSpecifier = URL['href'];
  */
 export type Specifier = URL['pathname'] | ResolvedSpecifier;
 
-export type NodeError = Error & Partial<{
+export type NodeError = Partial<Error> & Partial<{
 	code: string,
 	url: FSAbsolutePath,
 }>;

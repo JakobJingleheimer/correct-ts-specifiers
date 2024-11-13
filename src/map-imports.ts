@@ -24,7 +24,7 @@ export const mapImports = async (
 
 	if (resolvesToNodeModule(specifier, parentPath)) {
 		const typeDefUrl = getTypeDefsFromPjson(specifier, { url: parentPath });
-		return { }
+		console.log({ typeDefUrl })
 	}
 
 	let { isType, replacement } = await replaceJSExtWithTSExt(parentPath, specifier);

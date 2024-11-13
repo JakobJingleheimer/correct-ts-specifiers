@@ -21,7 +21,7 @@ import { isDir } from './is-dir.ts';
  * @param rExt A file extension to try to use when making a correction.
  */
 export const replaceJSExtWithTSExt = async (
-	parentPath: FSAbsolutePath,
+	parentPath: FSAbsolutePath | Specifier,
 	specifier: Specifier,
 	rExt?: TSExt | DExt,
 ): Promise<{

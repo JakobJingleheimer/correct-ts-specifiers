@@ -1,5 +1,4 @@
 import _get from 'lodash.get';
-import { PackageJson } from 'type-fest';
 
 import type {
 	NodeError,
@@ -28,14 +27,9 @@ export function getTypeDefsFromPjson(
 		'exports.typings',
 		`exports['${subpath}'].typings`,
 	]) {
-		tryPjsonTypeDef(pjson, sub);
+		const typesPath = _get(pjson, sub) as Specifier;
+		if (typesPath) return import.meta.resolve(typesPath, unresolved);
 	}
 
-	if (!typesPath) return;
-
-	return import.meta.resolve(typesPath, unresolved);
-}
-
-function tryPjsonTypeDef(pjson: PackageJson, objPath: string) {
-
+	return; // not found
 }
