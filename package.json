@@ -34,7 +34,6 @@
   "dependencies": {
     "@codemod.com/workflow": "^0.0.28",
     "lodash.get": "^4.4.2",
-    "nodejs-loaders": "^1.0.0",
-    "ts-morph": "^24.0.0"
+    "nodejs-loaders": "^1.0.0"
   }
 }
