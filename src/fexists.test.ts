@@ -9,7 +9,7 @@ import {
 } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
-import type{ FSAbsolutePath } from './index.d.ts';
+import type { FSAbsolutePath } from './index.d.ts';
 
 
 type FSAccess = typeof import('node:fs/promises').access;
