@@ -33,14 +33,10 @@ export function resolveSpecifier(
 		: parentPath;
 
 	try {
-		const interimResolvedUrl = import.meta.resolve(specifier, parentUrl);
+		const interimResolvedUrl = import.meta.resolve(specifier, parentUrl) as ResolvedSpecifier;
 
-		if (resolvesToNodeModule(interimResolvedUrl, parentUrl)) {
-			// TODO add a case for an extensionless subpath import
-			if (getPackageJSON(interimResolvedUrl, parentUrl)?.exports) {
-				return specifier;
-			}
-		}
+		if (resolvesToNodeModule(interimResolvedUrl, parentUrl)) return specifier;
+
 		resolvedSpecifierUrl = interimResolvedUrl; // ! let continue to `fileURLToPath` below
 	} catch (err) {
 		if (!(err instanceof Error)) throw err;
