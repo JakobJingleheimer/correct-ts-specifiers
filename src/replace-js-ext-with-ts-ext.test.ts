@@ -17,6 +17,7 @@ import {
 	suspectExts,
 	tsExts,
 } from './exts.ts';
+import type { FSAbsolutePath } from './index.d.ts';
 
 
 type MockModuleContext = ReturnType<typeof mock.module>;
@@ -25,9 +26,9 @@ type Logger = typeof import('./logger.ts').logger;
 type ReplaceJSExtWithTSExt = typeof import('./replace-js-ext-with-ts-ext.ts').replaceJSExtWithTSExt;
 
 describe('Correcting ts file extensions', () => {
-	const originatingFilePath = fileURLToPath(import.meta.resolve('./test.ts'));
-	const fixturesDir = path.join(import.meta.dirname, 'fixtures/e2e');
-	const catSpecifier = path.join(fixturesDir, 'Cat.ts');
+	const originatingFilePath = fileURLToPath(import.meta.resolve('./test.ts')) as FSAbsolutePath;
+	const fixturesDir = path.join(import.meta.dirname, 'fixtures/e2e') as FSAbsolutePath;
+	const catSpecifier = path.join(fixturesDir, 'Cat.ts') as FSAbsolutePath;
 
 	let mock__log: Mock<Logger>['mock'];
 	let mock__logger: MockModuleContext;
@@ -137,7 +138,7 @@ describe('Correcting ts file extensions', () => {
 			for (const base of ['.', './']) {
 				for (const jsExt of jsExts) {
 					const output = await replaceJSExtWithTSExt(
-						fileURLToPath(import.meta.resolve(`./fixtures/dir/${jsExt.slice(1)}/test.ts`)),
+						fileURLToPath(import.meta.resolve(`./fixtures/dir/${jsExt.slice(1)}/test.ts`)) as FSAbsolutePath,
 						base,
 					);
 
@@ -147,7 +148,7 @@ describe('Correcting ts file extensions', () => {
 
 				for (const tsExt of tsExts) {
 					const output = await replaceJSExtWithTSExt(
-						fileURLToPath(import.meta.resolve(`./fixtures/dir/${tsExt.slice(1)}/test.ts`)),
+						fileURLToPath(import.meta.resolve(`./fixtures/dir/${tsExt.slice(1)}/test.ts`)) as FSAbsolutePath,
 						base,
 					);
 

@@ -5,7 +5,7 @@ import { resolveSpecifier } from './resolve-specifier.ts';
 
 
 export async function isDir(
-	parentPath: FSAbsolutePath,
+	parentPath: FSAbsolutePath | ResolvedSpecifier,
 	specifier: Specifier,
 ) {
 	let resolvedSpecifier: ResolvedSpecifier;

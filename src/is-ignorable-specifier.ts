@@ -6,7 +6,7 @@ import {
 import { pathToFileURL } from 'node:url';
 
 import { tsExts } from './exts.ts';
-import type { FSAbsolutePath } from './index.d.ts';
+import type { FSAbsolutePath, ResolvedSpecifier } from './index.d.ts';
 import { resolvesToNodeModule } from './resolves-to-node-module.ts';
 
 
@@ -32,7 +32,7 @@ export function isIgnorableSpecifier(
 	if (specifier.startsWith('file://') /* './' */) return false;
 
 	try {
-		const resolvedSpecifier = import.meta.resolve(specifier, pathToFileURL(parentPath).href); // [1]
+		const resolvedSpecifier = import.meta.resolve(specifier, pathToFileURL(parentPath).href) as ResolvedSpecifier; // [1]
 		if (resolvesToNodeModule(resolvedSpecifier, parentPath)) return true;
 	} catch (err) { // @ts-ignore (TS requires type of err to be unknown)
 		if (!IGNORABLE_RESOLVE_ERRORS.has(err?.code)) throw err;

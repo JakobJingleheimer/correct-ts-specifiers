@@ -5,11 +5,11 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import type {
 	FSAbsolutePath,
 	NodeError,
+	NodeModSpecifier,
 	ResolvedSpecifier,
 	Specifier,
 } from './index.d.ts';
 import { getNotFoundUrl } from './get-not-found-url.ts';
-import { getPackageJSON } from './get-package-json.ts';
 import { resolvesToNodeModule } from './resolves-to-node-module.ts';
 
 
@@ -21,16 +21,16 @@ import { resolvesToNodeModule } from './resolves-to-node-module.ts';
 export function resolveSpecifier(
 	parentPath: FSAbsolutePath | ResolvedSpecifier,
 	specifier: Specifier,
-): FSAbsolutePath {
-	if (URL.canParse(specifier)) return fileURLToPath(specifier);
+): FSAbsolutePath | NodeModSpecifier {
+	if (URL.canParse(specifier)) return fileURLToPath(specifier) as FSAbsolutePath;
 
 	// import.meta.resolve() gives access to node's resolution algorithm, which is necessary to handle
 	// a myriad of non-obvious routes, like pjson subimports and the result of any hooks that may be
 	// helping, such as ones facilitating tsconfig's "paths"
 	let resolvedSpecifierUrl: URL['href'] | undefined;
-	const parentUrl = isAbsolute(parentPath)
+	const parentUrl = (isAbsolute(parentPath)
 		? pathToFileURL(parentPath).href
-		: parentPath;
+		: parentPath) as ResolvedSpecifier;
 
 	try {
 		const interimResolvedUrl = import.meta.resolve(specifier, parentUrl) as ResolvedSpecifier;

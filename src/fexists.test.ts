@@ -9,6 +9,8 @@ import {
 } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import type{ FSAbsolutePath } from './index.d.ts';
+
 
 type FSAccess = typeof import('node:fs/promises').access;
 type FExists = typeof import('./fexists.ts').fexists;
@@ -58,7 +60,7 @@ describe('fexists', () => {
 
 		it('should return `true` for a bare specifier', async () => {
 			const specifier = 'foo';
-			const parentUrl = fileURLToPath(import.meta.resolve('./fixtures/e2e/test.js'));
+			const parentUrl = fileURLToPath(import.meta.resolve('./fixtures/e2e/test.js')) as FSAbsolutePath;
 
 			assert.equal(await fexists(parentUrl, specifier), true);
 			assert.equal(

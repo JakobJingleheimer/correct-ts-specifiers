@@ -1,6 +1,6 @@
 import { extname } from 'node:path';
 
-import type { FSAbsolutePath, Specifier } from './index.d.ts';
+import type { FSAbsolutePath, NodeModSpecifier, ResolvedSpecifier, Specifier } from './index.d.ts';
 import {
 	type DExt,
 	type JSExt,
@@ -21,12 +21,12 @@ import { isDir } from './is-dir.ts';
  * @param rExt A file extension to try to use when making a correction.
  */
 export const replaceJSExtWithTSExt = async (
-	parentPath: FSAbsolutePath | Specifier,
+	parentPath: FSAbsolutePath | ResolvedSpecifier,
 	specifier: Specifier,
 	rExt?: TSExt | DExt,
 ): Promise<{
 	isType?: boolean,
-	replacement: FSAbsolutePath | null,
+	replacement: FSAbsolutePath | NodeModSpecifier | null,
 }> => {
 	if (
 		specifier === '.'

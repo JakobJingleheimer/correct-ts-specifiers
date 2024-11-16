@@ -1,16 +1,17 @@
 import assert from 'node:assert/strict';
+import path from 'node:path';
 import {
 	describe,
 	it,
 } from 'node:test';
 
+import type { FSAbsolutePath } from './index.d.ts';
 import { resolveSpecifier } from './resolve-specifier.ts';
-import path from 'node:path';
 
 
 describe('Resolve specifier', () => {
-	const fixturesDir = path.join(import.meta.dirname, 'fixtures/e2e');
-	const catSpecifier = `${fixturesDir}/Cat.ts`;
+	const fixturesDir = path.join(import.meta.dirname, 'fixtures/e2e') as FSAbsolutePath;
+	const catSpecifier = `${fixturesDir}/Cat.ts` as FSAbsolutePath;
 
 	it('should strip an already resolved specifier (file url → path)', () => {
 		const resolvedSpecifier = resolveSpecifier(
