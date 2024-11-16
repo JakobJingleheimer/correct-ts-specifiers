@@ -33,7 +33,7 @@ export function isIgnorableSpecifier(
 
 	try {
 		const resolvedSpecifier = import.meta.resolve(specifier, pathToFileURL(parentPath).href); // [1]
-		if (resolvesToNodeModule(resolvedSpecifier, parentPath)) return false; // May be a type import
+		if (resolvesToNodeModule(resolvedSpecifier, parentPath)) return true;
 	} catch (err) { // @ts-ignore (TS requires type of err to be unknown)
 		if (!IGNORABLE_RESOLVE_ERRORS.has(err?.code)) throw err;
 	}
