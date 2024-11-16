@@ -31,7 +31,7 @@ export function isIgnorableSpecifier(
 
 	if (specifier[0] === sep /* '/' */) return false;
 	if (specifier.startsWith(`.${sep}`) /* './' */) return false;
-	if (specifier.startsWith('file://') /* './' */) return false;
+	if (specifier.startsWith('file://')) return false;
 
 	try {
 		const resolvedSpecifier = import.meta.resolve(specifier, pathToFileURL(parentPath).href) as ResolvedSpecifier; // [1]
