@@ -27,7 +27,9 @@ export function isIgnorableSpecifier(
 	if (tsExts.includes(ext)) return true;
 	else if (ext) return false; // there is an extension and it's not TS → suspect
 
-	if (specifier.startsWith(sep) /* '/' */) return false;
+	if (specifier[0] === '@') return true; // namespaced node module
+
+	if (specifier[0] === sep /* '/' */) return false;
 	if (specifier.startsWith(`.${sep}`) /* './' */) return false;
 	if (specifier.startsWith('file://') /* './' */) return false;
 

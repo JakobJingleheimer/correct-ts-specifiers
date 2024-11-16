@@ -22,6 +22,10 @@ describe('Is ignorable specifier', () => {
 		assert.equal(isIgnorableSpecifier(parentPath, 'data:text/plain;base64,ZXhwb3J0IGNvbnN0IGZvbyA9ICJmb28i'), true);
 	});
 
+	it('should ignore namespaced specifiers (node module)', () => {
+		assert.equal(isIgnorableSpecifier(parentPath, '@foo/bar'), true);
+	});
+
 	it('should ignore TS file extensions', () => {
 		for (const tsExt of tsExts) {
 			assert.equal(isIgnorableSpecifier(parentPath, `tmp${tsExt}`), true);
@@ -58,6 +62,5 @@ describe('Is ignorable specifier', () => {
 	it('should NOT ignore possibly unsuffixed paths', () => {
 		assert.equal(isIgnorableSpecifier(parentPath, 'tmp-zed_1'), false);
 		assert.equal(isIgnorableSpecifier(parentPath, 'tmp-zed/foo_1'), false);
-		assert.equal(isIgnorableSpecifier(parentPath, '@tmp-zed/foo_1'), false);
 	});
 });
