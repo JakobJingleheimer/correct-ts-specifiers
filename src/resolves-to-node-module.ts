@@ -8,7 +8,9 @@ export function resolvesToNodeModule(
 	resolvedUrl: ResolvedSpecifier,
 	parentLocus: FSAbsolutePath | ResolvedSpecifier,
 ) {
-	const parentUrl = isAbsolute(parentLocus[0])
+	if (!URL.canParse(resolvedUrl)) throw new TypeError(`resolvedUrl must be a file url string`);
+
+	const parentUrl = isAbsolute(parentLocus)
 		? pathToFileURL(parentLocus).href
 		: parentLocus;
 
