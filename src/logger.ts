@@ -27,6 +27,8 @@ const logs = new Map<Source, Set<FileLog>>();
 
 process.once('beforeExit', emitLogs);
 
+/* node:coverage disable */
+// this is actually coveraged, but v8 doesn't recognise it
 function emitLogs() {
 	let hasError = false;
 
@@ -47,3 +49,4 @@ function emitLogs() {
 		console.log('[Codemod: correct-ts-specifiers]: migration complete!');
 	}
 }
+/* node:coverage enable */

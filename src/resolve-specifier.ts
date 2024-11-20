@@ -2,6 +2,7 @@
 import { isAbsolute } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
+/* node:coverage disable */
 import type {
 	FSAbsolutePath,
 	NodeError,
@@ -9,6 +10,7 @@ import type {
 	ResolvedSpecifier,
 	Specifier,
 } from './index.d.ts';
+/* node:coverage enable */
 import { getNotFoundUrl } from './get-not-found-url.ts';
 import { resolvesToNodeModule } from './resolves-to-node-module.ts';
 
