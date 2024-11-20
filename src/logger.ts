@@ -31,7 +31,7 @@ function emitLogs() {
 	let hasError = false;
 
 	for (const [sourceFile, fileLog] of logs.entries()) {
-		console.log('[Codemod: correct-ts-extensions]:', sourceFile)
+		console.log('[Codemod: correct-ts-specifiers]:', sourceFile)
 		for (const { msg, type } of fileLog) {
 			console[type](' •', msg);
 			if (type === 'error') hasError = true;
@@ -39,11 +39,11 @@ function emitLogs() {
 	}
 
 	if (hasError) {
-		console.error('[Codemod: correct-ts-extensions]: migration incomplete!');
+		console.error('[Codemod: correct-ts-specifiers]: migration incomplete!');
 		process.exitCode = 1;
 	}
 	else {
 		process.exitCode = 0;
-		console.log('[Codemod: correct-ts-extensions]: migration complete!');
+		console.log('[Codemod: correct-ts-specifiers]: migration complete!');
 	}
 }
