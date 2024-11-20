@@ -2,12 +2,10 @@
 
 ![tests](https://github.com/JakobJingleheimer/correct-ts-specifiers/actions/workflows/ci.yml/badge.svg)
 
-This package transforms import specifiers in source-code from the broken state TypeScript's compiler (`tsc`) required (prior TypeScript v5.8) into proper ones. This is useful when source-code is processed by standards-compliant software like Node.js.
-
-This is a one-and-done process, and the updated source-code should be committed to your version control (ex git); thereafter, source-code import statements should be authored to be compliant with the ECMAScript (JavaScript) standard.
+This package transforms import specifiers in source-code from the broken state TypeScript's compiler (`tsc`) required (prior TypeScript v5.7 RC) into proper ones. This is useful when source-code is processed by standards-compliant software like Node.js. This is a one-and-done process, and the updated source-code should be committed to your version control (ex git); thereafter, source-code import statements should be authored compliant with the ECMAScript (JavaScript) standard.
 
 > [!TIP]
-> Those using `tsc` to compile code will need to enable [``](); those using `tsc` for only type-checking (ex via a lint/test step like `npm run test:types`) will need to enable [`allowImportingTsExtensions`](https://www.typescriptlang.org/tsconfig/#allowImportingTsExtensions) (this requires additional compile options be set—see the cited documentation);
+> Those using `tsc` to compile code will need to enable [`rewriteRelativeImportExtensions`](https://devblogs.microsoft.com/typescript/announcing-typescript-5-7-rc/#path-rewriting-for-relative-paths); those using `tsc` for only type-checking (ex via a lint/test step like `npm run test:types`) will need to enable [`allowImportingTsExtensions`](https://www.typescriptlang.org/tsconfig/#allowImportingTsExtensions) (this requires additional compile options be set—see the cited documentation);
 
 This package does not just blindly find & replace file extensions within specifiers: It confirms that the replacement specifier actually exists; in ambiguous cases (such as two files with the same basename in the same location but different relevant file extensions like `/tmp/foo.js` and `/tmp/foo.ts`), it logs an error, skips that specifier, and continues processing.
 
