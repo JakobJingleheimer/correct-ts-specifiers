@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 import { tsExts } from './exts.ts';
 import { isIgnorableSpecifier } from './is-ignorable-specifier.ts';
+import type { FSAbsolutePath } from './index.d.ts';
 
 
 describe('Is ignorable specifier', () => {
@@ -35,7 +36,7 @@ describe('Is ignorable specifier', () => {
 	});
 
 	it('should ignore node_modules', () => {
-		const parentPath = fileURLToPath(import.meta.resolve('./fixtures/e2e/e2e.ts'));
+		const parentPath = fileURLToPath(import.meta.resolve('./fixtures/e2e/e2e.ts')) as FSAbsolutePath;
 		assert.equal(isIgnorableSpecifier(parentPath, 'foo'), true);
 	});
 
