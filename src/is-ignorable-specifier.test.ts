@@ -39,6 +39,11 @@ describe('Is ignorable specifier', () => {
 		assert.equal(isIgnorableSpecifier(parentPath, 'foo'), true);
 	});
 
+	it('should handle node modules with no implementation (type-declaration-only)', () => {
+		const parentPath = fileURLToPath(import.meta.resolve('./fixtures/e2e/e2e.ts')) as FSAbsolutePath;
+		assert.equal(isIgnorableSpecifier(parentPath, 'animal-features'), true);
+	});
+
 	it('should NOT ignore absolute paths', () => {
 		assert.equal(isIgnorableSpecifier(parentPath, '/tmp'), false);
 		assert.equal(isIgnorableSpecifier(parentPath, '/tmp-foo_1'), false);
