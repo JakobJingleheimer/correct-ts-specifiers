@@ -9,11 +9,12 @@ import {
 } from 'node:test';
 import { fileURLToPath } from 'node:url';
 
+import type { FSAbsolutePath } from './index.d.ts';
+
 
 type FSAccess = typeof import('node:fs/promises').access;
 type FExists = typeof import('./fexists.ts').fexists;
 type ResolveSpecifier = typeof import('./resolve-specifier.ts').resolveSpecifier;
-// type MockModuleContext = ReturnType<typeof mock.module>;
 
 const RESOLVED_SPECIFIER_ERR = 'Resolved specifier did not match expected';
 
@@ -59,7 +60,7 @@ describe('fexists', () => {
 
 		it('should return `true` for a bare specifier', async () => {
 			const specifier = 'foo';
-			const parentUrl = fileURLToPath(import.meta.resolve('./fixtures/e2e/test.js'));
+			const parentUrl = fileURLToPath(import.meta.resolve('./fixtures/e2e/test.js')) as FSAbsolutePath;
 
 			assert.equal(await fexists(parentUrl, specifier), true);
 			assert.equal(

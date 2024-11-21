@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 import { tsExts } from './exts.ts';
 import { isIgnorableSpecifier } from './is-ignorable-specifier.ts';
+import type { FSAbsolutePath } from './index.d.ts';
 
 
 describe('Is ignorable specifier', () => {
@@ -22,6 +23,10 @@ describe('Is ignorable specifier', () => {
 		assert.equal(isIgnorableSpecifier(parentPath, 'data:text/plain;base64,ZXhwb3J0IGNvbnN0IGZvbyA9ICJmb28i'), true);
 	});
 
+	it('should ignore namespaced specifiers (node module)', () => {
+		assert.equal(isIgnorableSpecifier(parentPath, '@foo/bar'), true);
+	});
+
 	it('should ignore TS file extensions', () => {
 		for (const tsExt of tsExts) {
 			assert.equal(isIgnorableSpecifier(parentPath, `tmp${tsExt}`), true);
@@ -31,8 +36,13 @@ describe('Is ignorable specifier', () => {
 	});
 
 	it('should ignore node_modules', () => {
-		const parentPath = fileURLToPath(import.meta.resolve('./fixtures/e2e/e2e.ts'));
+		const parentPath = fileURLToPath(import.meta.resolve('./fixtures/e2e/e2e.ts')) as FSAbsolutePath;
 		assert.equal(isIgnorableSpecifier(parentPath, 'foo'), true);
+	});
+
+	it('should handle node modules with no implementation (type-declaration-only)', () => {
+		const parentPath = fileURLToPath(import.meta.resolve('./fixtures/e2e/e2e.ts')) as FSAbsolutePath;
+		assert.equal(isIgnorableSpecifier(parentPath, 'animal-features'), true);
 	});
 
 	it('should NOT ignore absolute paths', () => {
@@ -58,6 +68,5 @@ describe('Is ignorable specifier', () => {
 	it('should NOT ignore possibly unsuffixed paths', () => {
 		assert.equal(isIgnorableSpecifier(parentPath, 'tmp-zed_1'), false);
 		assert.equal(isIgnorableSpecifier(parentPath, 'tmp-zed/foo_1'), false);
-		assert.equal(isIgnorableSpecifier(parentPath, '@tmp-zed/foo_1'), false);
 	});
 });

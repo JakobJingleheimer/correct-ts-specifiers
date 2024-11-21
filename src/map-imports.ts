@@ -1,9 +1,9 @@
 import type { FSAbsolutePath, Specifier } from './index.d.ts';
 import { fexists } from './fexists.ts';
-import { logger } from './logger.js';
+import { logger } from './logger.ts';
+import { isDir } from './is-dir.ts';
 import { isIgnorableSpecifier } from './is-ignorable-specifier.ts';
 import { replaceJSExtWithTSExt } from './replace-js-ext-with-ts-ext.ts';
-import { isDir } from './is-dir.ts';
 
 
 /**

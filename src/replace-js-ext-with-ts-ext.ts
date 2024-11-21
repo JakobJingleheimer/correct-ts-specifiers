@@ -1,6 +1,6 @@
 import { extname } from 'node:path';
 
-import type { FSAbsolutePath, Specifier } from './index.d.ts';
+import type { FSAbsolutePath, NodeModSpecifier, ResolvedSpecifier, Specifier } from './index.d.ts';
 import {
 	type DExt,
 	type JSExt,
@@ -9,7 +9,7 @@ import {
 	suspectExts,
 } from './exts.ts';
 import { fexists } from './fexists.ts';
-import { logger } from './logger.js';
+import { logger } from './logger.ts';
 import { isDir } from './is-dir.ts';
 
 
@@ -21,12 +21,12 @@ import { isDir } from './is-dir.ts';
  * @param rExt A file extension to try to use when making a correction.
  */
 export const replaceJSExtWithTSExt = async (
-	parentPath: FSAbsolutePath,
+	parentPath: FSAbsolutePath | ResolvedSpecifier,
 	specifier: Specifier,
 	rExt?: TSExt | DExt,
 ): Promise<{
 	isType?: boolean,
-	replacement: FSAbsolutePath | null,
+	replacement: FSAbsolutePath | NodeModSpecifier | null,
 }> => {
 	if (
 		specifier === '.'
@@ -101,7 +101,7 @@ async function checkSet<Ext extends DExt | JSExt | TSExt>(
 	}
 
 	if (found.size) {
-		if (found.size === 1) return { isType: exts[0].startsWith('.d'), replacement };
+		if (found.size === 1) return { isType: exts[0].startsWith('.d'), replacement: replacement! };
 
 		logger(
 			parentPath,

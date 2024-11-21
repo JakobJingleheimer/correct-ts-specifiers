@@ -26,7 +26,7 @@ describe('Map Imports', () => {
 	before(async () => {
 		const logger = mock.fn<Logger>();
 		({ mock: mock__log } = logger);
-		mock__logger = mock.module('./logger.js', {
+		mock__logger = mock.module('./logger.ts', {
 			namedExports: { logger }
 		});
 
@@ -37,7 +37,7 @@ describe('Map Imports', () => {
 		mock__log.resetCalls();
 	});
 
-	it('unambiguous: should skip specifier is a node builtin', async () => {
+	it('unambiguous: should skip a node builtin specifier', async () => {
 		const output = await mapImports(
 			originatingFilePath,
 			'node:console',
@@ -47,7 +47,7 @@ describe('Map Imports', () => {
 		assert.notEqual(output.isType, true);
 	});
 
-	it('quasi-ambiguous: should append TS extension when path resolves to a file', async () => {
+	it('quasi-ambiguous: should append a JS extension when path resolves to a file', async () => {
 		const specifier = './fixtures/bar';
 		const output = await mapImports(
 			originatingFilePath,
@@ -58,7 +58,7 @@ describe('Map Imports', () => {
 		assert.notEqual(output.isType, true);
 	});
 
-	it('quasi-ambiguous: should append TS extension when path resolves to a file', async () => {
+	it('quasi-ambiguous: should append a TS extension when path resolves to a file', async () => {
 		const specifier = './fixtures/foo';
 		const output = await mapImports(
 			originatingFilePath,

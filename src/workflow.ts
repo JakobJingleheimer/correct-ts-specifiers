@@ -5,13 +5,14 @@ import {
 import type { Helpers } from '@codemod.com/workflow/dist/jsFam.d.ts';
 
 import { mapImports } from './map-imports.ts';
+import type { FSAbsolutePath } from './index.d.ts';
 
 
 export async function workflow({ contexts, files }: Api) {
 	await files(globPattern).jsFam(processModule);
 
 	async function processModule({ astGrep }: Helpers) {
-		const filepath = contexts.getFileContext().file; // absolute fs path
+		const filepath = contexts.getFileContext().file as FSAbsolutePath;
 
 		await astGrep({
 			rule: {

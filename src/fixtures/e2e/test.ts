@@ -12,13 +12,13 @@ export { Zed } from './zed';
 
 // should be unchanged
 
-export const makeLink = (path: URL) => (new URL(path, baseUrl)).href;
-
 const nil = await import('./nil.js');
 
 const bird = new Bird('Tweety');
 const cat = new Cat('Milo');
 const dog = new Dog('Otis');
+
+export const makeLink = (path: URL) => (new URL(path, baseUrl)).href;
 
 console.log('bird:', bird);
 console.log('cat:', cat);
